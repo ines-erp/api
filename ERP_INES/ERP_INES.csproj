@@ -16,6 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="compose_file_for_pg_db\" />
       <Folder Include="Controllers\" />
     </ItemGroup>
 

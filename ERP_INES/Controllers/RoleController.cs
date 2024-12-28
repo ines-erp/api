@@ -1,5 +1,6 @@
 using ERP_INES.Data;
 using ERP_INES.Entities;
+using ERP_INES.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ERP_INES.Controllers;
@@ -8,28 +9,23 @@ namespace ERP_INES.Controllers;
 [Route("api/v1/[controller]")]
 public class RoleController : Controller
 {
-    //We will list our endpoints
+    private IRoleRepository _roleRepository;
+
+    public RoleController()
+    {
+        _roleRepository = new RoleRepository(new InesDbContext());
+    }
+
+
     //GET all roles
     [HttpGet(Name = "all_roles")]
     public IActionResult Get()
     {
-        //TODO: Access database, perform a query to get all roles and return it
-        using var context = new InesDbContext();
-        var roles = context.Roles.ToList();
-
+        var roles = _roleRepository.GetRoles();
         return Json(roles);
     }
-
+    
+    
     //POST
-    [HttpPost]
-    public IActionResult Post()
-    {
-        using var context = new InesDbContext();
-        var newRole = new Role("First dummy role", PermissionScope.ALL, new List<Permission>([Permission.ALL]));
-
-        context.Roles.Add(newRole);
-        context.SaveChanges();
-
-        return Created();
-    }
+    
 }

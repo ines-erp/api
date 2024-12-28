@@ -6,4 +6,11 @@ public class Role
     public string Name { get; set; }
     public PermissionScope Scope { get; set; }
     public List<Permission> Permission { get; set; }
+
+    public Role(string name, PermissionScope scope, List<Permission> permission)
+    {
+        Name = name;
+        Scope = scope;
+        Permission = permission;
+    }
 }

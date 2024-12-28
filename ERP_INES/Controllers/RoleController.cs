@@ -18,7 +18,7 @@ public class RoleController : Controller
 
 
     //GET all roles
-    [HttpGet(Name = "all_roles")]
+    [HttpGet]
     public IActionResult Get()
     {
         var roles = _roleRepository.GetRoles();
@@ -27,5 +27,10 @@ public class RoleController : Controller
     
     
     //POST
-    
+    [HttpPost]
+    public ActionResult<int> Post(Role role)
+    {
+        _roleRepository.InsertRole(role);
+        return StatusCodes.Status201Created;
+    }
 }

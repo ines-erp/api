@@ -32,6 +32,7 @@ public class RoleRepository : IRoleRepository
                 return;
 
             _context.Roles.Add(role);
+            Save();
         }
         catch (Exception e)
         {

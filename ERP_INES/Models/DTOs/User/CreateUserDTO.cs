@@ -1,11 +1,9 @@
-namespace ERP_INES.Models.Entity;
+namespace ERP_INES.Models.DTOs.User;
 
-public class User
+public class CreateUserDTO
 {
-    public Guid Id { get; private set; }
     public required string Name { get; set; }
     public required string Password { get; set; }
     public required string Email { get; set; }
     // public required List<Role> Roles;
-    
 }

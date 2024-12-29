@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using ERP_INES.Models.Enums;
 
 namespace ERP_INES.Models.Entity;
@@ -8,4 +9,8 @@ public class Role
     public required string Name { get; set; }
     public required PermissionScope Scope { get; set; }
     public required List<PermissionLevel> Permissions { get; set; }
+    
+    [JsonIgnore]
+    public IList<User>? Users { get; set; }
+    
 }

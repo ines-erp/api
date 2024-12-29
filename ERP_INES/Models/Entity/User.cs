@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace ERP_INES.Models.Entity;
 
 public class User
@@ -6,6 +8,7 @@ public class User
     public required string Name { get; set; }
     public required string Password { get; set; }
     public required string Email { get; set; }
-    // public required List<Role> Roles;
+    
+    public IList<Role>? Roles { get; set; }
     
 }

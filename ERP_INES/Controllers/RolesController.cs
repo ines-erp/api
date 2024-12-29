@@ -1,6 +1,7 @@
 using ERP_INES.Data;
 using ERP_INES.Models.DTOs.Role;
 using ERP_INES.Models.Entity;
+using ERP_INES.Models.Enums;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ERP_INES.Controllers;
@@ -41,15 +42,36 @@ public class RolesController : ControllerBase
      if(createRoleDto is null)
          return BadRequest();
 
+     
+         
+
      var newRole = new Role()
      {
          Name = createRoleDto.Name,
-         Permissions = createRoleDto.Permissions,
+         Permissions = [],
          Scope = createRoleDto.Scope
      };
-     _context.Roles.Add(newRole);
-     _context.SaveChanges();
+     
+     //create a service to validate that
+     foreach (PermissionLevel level in createRoleDto.Permissions)
+     {
+         if (Enum.IsDefined(typeof(PermissionLevel), level))
+         {
+             newRole.Permissions.Add(level);
+         }
 
-     return Ok(newRole);
+     }
+
+     if (Enum.IsDefined(typeof(PermissionScope), createRoleDto.Scope) && newRole.Permissions.Count > 0)
+     {
+         _context.Roles.Add(newRole);
+         _context.SaveChanges();
+         
+         return Ok(newRole);
+     }
+
+     return BadRequest("Your dummy pass something that exists!!!!");
+
+
     }
 }

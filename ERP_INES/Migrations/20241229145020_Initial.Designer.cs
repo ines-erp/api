@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ERP_INES.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241229120914_Initial")]
+    [Migration("20241229145020_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -24,6 +24,28 @@ namespace ERP_INES.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("ERP_INES.Models.Entity.Role", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.PrimitiveCollection<int[]>("Permissions")
+                        .IsRequired()
+                        .HasColumnType("integer[]");
+
+                    b.Property<int>("Scope")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+                });
 
             modelBuilder.Entity("ERP_INES.Models.Entity.User", b =>
                 {

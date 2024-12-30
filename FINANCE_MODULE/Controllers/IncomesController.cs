@@ -55,14 +55,28 @@ public class IncomesController : ControllerBase
 
 
         return CreatedAtAction(nameof(GetIncomeById), new { id = income.Id }, income);
-        // return Ok();
     }
 
     [HttpPut]
     [Route("{id:guid}")]
     public async Task<IActionResult> UpdateIncome(Guid id, UpdateIncomeDto updateIncomeDto)
     {
-        return Ok();
+        var income = await _incomeRepository.UpdateIncome(id,
+            new Income()
+            {
+                Name = updateIncomeDto.Name,
+                Description = updateIncomeDto.Description,
+                Date = updateIncomeDto.Date,
+                Amount = updateIncomeDto.Amount,
+                Currency = updateIncomeDto.Currency,
+                IncomeMethod = updateIncomeDto.IncomeMethod,
+                IncomeMethodDescription = updateIncomeDto.IncomeMethodDescription,
+                PaidBy = updateIncomeDto.PaidBy,
+                TypeOfIncome = updateIncomeDto.TypeOfIncome
+            }
+        );
+
+        return CreatedAtAction(nameof(GetIncomeById), new { id = income.Id }, income);
     }
 
     [HttpDelete]
@@ -73,7 +87,7 @@ public class IncomesController : ControllerBase
 
         if (deletedIncome is null)
             return NotFound();
-        
+
         return Ok(deletedIncome);
     }
 }

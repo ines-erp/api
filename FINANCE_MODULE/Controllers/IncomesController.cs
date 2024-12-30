@@ -1,3 +1,4 @@
+using FINANCE_MODULE.Data.Models.Entities;
 using FINANCE_MODULE.Data.Models.Entities.DTOs;
 using FINANCE_MODULE.Repositories;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -17,23 +18,44 @@ public class IncomesController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllIncomes()
+    public async Task<IActionResult> GetIncomes()
     {
-        var incomes = await _incomeRepository.GetAllIncomes();
-        return Ok();
+        var incomes = await _incomeRepository.GetIncomes();
+        return Ok(incomes);
     }
 
     [HttpGet]
     [Route("{id:guid}")]
     public async Task<IActionResult> GetIncomeById(Guid id)
     {
-        return Ok();
+        var income = await _incomeRepository.GetIncomeById(id);
+        if (income is null)
+            return NotFound();
+
+        return Ok(income);
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateIncome(CreateIncomeDto creteIncomeDto)
+    public async Task<IActionResult> CreateIncome(CreateIncomeDto createIncomeDto)
     {
-        return Ok();
+        var income = await _incomeRepository.CreateIncome(
+            new Income()
+            {
+                Name = createIncomeDto.Name,
+                Description = createIncomeDto.Description,
+                Date = createIncomeDto.Date,
+                Amount = createIncomeDto.Amount,
+                Currency = createIncomeDto.Currency,
+                IncomeMethod = createIncomeDto.IncomeMethod,
+                IncomeMethodDescription = createIncomeDto.IncomeMethodDescription,
+                PaidBy = createIncomeDto.PaidBy,
+                TypeOfIncome = createIncomeDto.TypeOfIncome
+            }
+        );
+
+
+        return CreatedAtAction(nameof(GetIncomeById), new { id = income.Id }, income);
+        // return Ok();
     }
 
     [HttpPut]
@@ -44,9 +66,14 @@ public class IncomesController : ControllerBase
     }
 
     [HttpDelete]
-    [Route("{id;guid}")]
+    [Route("{id:guid}")]
     public async Task<IActionResult> DeleteIncome(Guid id)
     {
-        return Ok();
+        var deletedIncome = await _incomeRepository.DeleteIncome(id);
+
+        if (deletedIncome is null)
+            return NotFound();
+        
+        return Ok(deletedIncome);
     }
 }

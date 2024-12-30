@@ -1,4 +1,5 @@
 using FINANCE_MODULE.Data.Models.Entities.DTOs;
+using FINANCE_MODULE.Repositories;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,9 +9,17 @@ namespace FINANCE_MODULE.Controllers;
 [ApiController]
 public class IncomesController : ControllerBase
 {
+    private readonly IIncomeRepository _incomeRepository;
+
+    public IncomesController(IIncomeRepository incomeRepository)
+    {
+        _incomeRepository = incomeRepository;
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetAllIncomes()
     {
+        var incomes = await _incomeRepository.GetAllIncomes();
         return Ok();
     }
 

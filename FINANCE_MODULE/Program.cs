@@ -1,4 +1,6 @@
 using FINANCE_MODULE.Data;
+using FINANCE_MODULE.Repositories;
+using FINANCE_MODULE.Repositories.Implementations.PostgreSQL;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +13,9 @@ builder.Services.AddOpenApi();
 
 builder.Services.AddDbContext<FinanceDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("LocalDevFinance")));
+
+//Injecting repository
+builder.Services.AddScoped<IIncomeRepository, PostgreSQLIncomeRepository>();
 
 var app = builder.Build();
 

@@ -16,7 +16,7 @@ builder.Services.AddDbContext<FinanceDbContext>(options =>
 
 //Injecting repository
 builder.Services.AddScoped<IIncomeRepository, PostgreSQLIncomeRepository>();
-
+builder.Services.AddScoped<IOutcomeRepository, PostgreSQLOutcomeRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

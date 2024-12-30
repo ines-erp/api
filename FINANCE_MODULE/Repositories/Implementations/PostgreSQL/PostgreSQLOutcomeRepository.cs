@@ -1,31 +1,70 @@
+using FINANCE_MODULE.Data;
 using FINANCE_MODULE.Data.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace FINANCE_MODULE.Repositories.Implementations.PostgreSQL;
 
 public class PostgreSQLOutcomeRepository: IOutcomeRepository
 {
-    public Task<List<Outcome>> GetOutcomes()
+    private readonly FinanceDbContext _context;
+
+    public PostgreSQLOutcomeRepository(FinanceDbContext context)
     {
-        throw new NotImplementedException();
+        _context = context;
     }
 
-    public Task<Outcome?> GetOutcomeById(Guid id)
+    public async Task<List<Outcome>> GetOutcomes()
     {
-        throw new NotImplementedException();
+        return await _context.Outcomes.ToListAsync();
     }
 
-    public Task<Outcome> CreateOutcome(Outcome Outcome)
+    public async Task<Outcome?> GetOutcomeById(Guid id)
     {
-        throw new NotImplementedException();
+        var outcome = await _context.Outcomes.FirstOrDefaultAsync(outcome => outcome.Id == id);
+
+        if (outcome is null)
+            return null;
+        
+        return outcome;
     }
 
-    public Task<Outcome?> UpdateOutcome(Guid id, Outcome Outcome)
+    public async Task<Outcome> CreateOutcome(Outcome outcome)
     {
-        throw new NotImplementedException();
+        await _context.Outcomes.AddAsync(outcome);
+        await _context.SaveChangesAsync();
+        return outcome;
     }
 
-    public Task<Outcome?> DeleteOutcome(Guid id)
+    public async Task<Outcome?> UpdateOutcome(Guid id, Outcome outcome)
     {
-        throw new NotImplementedException();
+        var existingOutcome = await _context.Outcomes.FirstOrDefaultAsync(outcome => outcome.Id == id);
+        if (existingOutcome is null)
+            return null;
+        
+        existingOutcome.Name = outcome.Name;
+        existingOutcome.Description = outcome.Description;
+        existingOutcome.Date = outcome.Date;
+        existingOutcome.Amount = outcome.Amount;
+        existingOutcome.Currency = outcome.Currency;
+        existingOutcome.OutcomeMethod = outcome.OutcomeMethod;
+        existingOutcome.OutcomeMethodDescription = outcome.OutcomeMethodDescription;
+        existingOutcome.Beneficiary = outcome.Beneficiary;
+        existingOutcome.TypeOfOutcome = outcome.TypeOfOutcome;
+
+        await _context.SaveChangesAsync();
+        
+        return existingOutcome;
+    }
+
+    public async Task<Outcome?> DeleteOutcome(Guid id)
+    {
+        var existingOutcome = await _context.Outcomes.FirstOrDefaultAsync(outcome => outcome.Id == id);
+
+        if (existingOutcome is null)
+            return null;
+        
+        _context.Outcomes.Remove(existingOutcome);
+        await _context.SaveChangesAsync();
+        return existingOutcome;
     }
 }

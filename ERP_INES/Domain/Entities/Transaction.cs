@@ -14,11 +14,10 @@ public class Transaction
     public string? RecievedBy { get; set; }
 
     public Guid CurrencyId { get; set; }
-    public Currency Currency { get; set; }
-
     public Guid PaymentMethodId { get; set; }
-    public PyamentMethod PyamentMethod { get; set; }
-
     public Guid TransactionCategoryId { get; set; }
-    public TransactionCategory? Category { get; set; }
+    
+    public Currency Currency { get; set; }
+    public PaymentMethod PaymentMethod { get; set; }
+    public TransactionCategory? TransactionCategory { get; set; }
 }

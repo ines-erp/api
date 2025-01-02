@@ -12,11 +12,19 @@ public class PSQLTransactionRepository : ITransactionRepository
     {
         _context = context;
     }
-    
+
     public async Task<List<Transaction>> GetTransactionsAsync()
     {
-        var transactions = await _context.Transactions.ToListAsync();
+        var transactions = await _context.Transactions.Include("Currency").Include("PaymentMethod").Include("TransactionCategory").ToListAsync();
 
         return transactions;
+    }
+
+    public async Task<Transaction> CreateAsync(Transaction transaction)
+    {
+        await _context.Transactions.AddAsync(transaction);
+        await _context.SaveChangesAsync();
+
+        return transaction;
     }
 }

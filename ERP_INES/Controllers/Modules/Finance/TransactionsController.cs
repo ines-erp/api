@@ -2,6 +2,7 @@
 using AutoMapper;
 using ERP_INES.Data.Modules.Finance.Repositories.Interfaces;
 using ERP_INES.Domain.Modules.Finance.DTOs;
+using ERP_INES.Domain.Modules.Finance.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ERP_INES.Controllers.Modules.Finance;
@@ -21,7 +22,7 @@ public class TransactionsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAllTransactions()
+    public async Task<IActionResult> GetTransactions()
     {
         var transactionDomain = await _repository.GetTransactionsAsync();
 
@@ -29,4 +30,15 @@ public class TransactionsController : ControllerBase
 
         return Ok(transactionsDto);
     }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateTransaction([FromBody] CreateTransactionDto createTransactionDto)
+    {
+
+        var transactionMapper = _mapper.Map<Transaction>(createTransactionDto);
+        var newTransaction = await _repository.CreateAsync(transactionMapper);
+        
+        return Ok(newTransaction);
+    }
+    
 }

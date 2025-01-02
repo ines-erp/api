@@ -9,5 +9,6 @@ public class AutomapperFinanceProfiles : Profile
     public AutomapperFinanceProfiles()
     {
         CreateMap<TransactionDto, Transaction>().ReverseMap();
+        CreateMap<CreateTransactionDto, Transaction>().ReverseMap();
     }
 }

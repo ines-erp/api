@@ -25,13 +25,13 @@ public class FinanceDbContext : DbContext
         {
             new Currency
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.Parse("7DF7CDDF-471B-4E17-BC59-70B0FF0A144D"),
                 Name = "Euro",
                 Symbol = "€"
             },
             new Currency
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.Parse("10F35F9E-7810-44B7-BE37-A9D7CD6EF5F8"),
                 Name = "Brazilian Real",
                 Symbol = "R$"
             }
@@ -41,12 +41,12 @@ public class FinanceDbContext : DbContext
         {
             new TransactionType
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.Parse("92D6E7B8-A4E0-43A1-B0D7-50921E851CC4"),
                 Name = "Income"
             },
             new TransactionType
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.Parse("FD5E3535-5A7C-4294-ABDE-49E869D77957"),
                 Name = "Outcome"
             }
         };
@@ -55,12 +55,12 @@ public class FinanceDbContext : DbContext
         {
             new TransactionCategory
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.Parse("E25116D5-911D-4D3C-9A36-1EDEE0398DE7"),
                 Name = "Bills"
             },
             new TransactionCategory
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.Parse("7E9E46E8-4A54-41F2-89CB-8448960971FF"),
                 Name = "Assets acquisition"
             }
         };
@@ -69,13 +69,13 @@ public class FinanceDbContext : DbContext
         {
             new PaymentMethod
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.Parse("1D69C5C3-9887-47E3-A07D-6CFFBB5051F5"),
                 Name = "Cash",
                 Description = "Paid by cash"
             },
             new PaymentMethod
             {
-                Id = Guid.NewGuid(),
+                Id = Guid.Parse("A15541A5-335E-4CD9-9C2E-7240FD9A006F"),
                 Name = "Bank transfer",
                 Description = "Transferred to bank account"
             }

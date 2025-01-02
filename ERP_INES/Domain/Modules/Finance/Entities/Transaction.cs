@@ -1,8 +1,6 @@
-using ERP_INES.Domain.Entities;
+namespace ERP_INES.Domain.Modules.Finance.Entities;
 
-namespace ERP_INES.Domain.DTOs;
-
-public class TransactionDto
+public class Transaction
 {
     public Guid Id { get; set; }
     public string Name { get; set; }
@@ -14,7 +12,11 @@ public class TransactionDto
     public DateTime UpdatedAt { get; set; }
     public string? PaidBy { get; set; }
     public string? RecievedBy { get; set; }
-    
+
+    public Guid CurrencyId { get; set; }
+    public Guid PaymentMethodId { get; set; }
+    public Guid TransactionCategoryId { get; set; }
+
     public Currency Currency { get; set; }
     public PaymentMethod PaymentMethod { get; set; }
     public TransactionCategory? TransactionCategory { get; set; }

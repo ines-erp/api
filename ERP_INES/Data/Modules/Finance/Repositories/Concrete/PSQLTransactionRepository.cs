@@ -1,8 +1,8 @@
-using ERP_INES.Data.Repositories.Interfaces;
-using ERP_INES.Domain.Entities;
+using ERP_INES.Data.Modules.Finance.Repositories.Interfaces;
+using ERP_INES.Domain.Modules.Finance.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace ERP_INES.Data.Repositories.Concrete;
+namespace ERP_INES.Data.Modules.Finance.Repositories.Concrete;
 
 public class PSQLTransactionRepository : ITransactionRepository
 {

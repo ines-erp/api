@@ -1,7 +1,7 @@
-using ERP_INES.Domain.Entities;
+using ERP_INES.Domain.Modules.Finance.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace ERP_INES.Data;
+namespace ERP_INES.Data.Modules.Finance;
 
 public class FinanceDbContext : DbContext
 

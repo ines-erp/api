@@ -1,4 +1,4 @@
-namespace ERP_INES.Domain.Entities;
+namespace ERP_INES.Domain.Modules.Finance.Entities;
 
 public class TransactionType
 {

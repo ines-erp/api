@@ -1,4 +1,6 @@
-using ERP_INES.Data;
+using ERP_INES.Data.Modules.Finance;
+using ERP_INES.Data.Modules.Finance.Repositories.Concrete;
+using ERP_INES.Data.Modules.Finance.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,11 +9,14 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 builder.Services.AddApiVersioning();
+builder.Services.AddAutoMapper(typeof(AutomapperFinanceProfiles));
 
 //Injecting DbContext
 builder.Services.AddDbContext<FinanceDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("LocalDevDb"))
 );
+
+builder.Services.AddScoped<ITransactionRepository, PSQLTransactionRepository>();
 
 
 var app = builder.Build();

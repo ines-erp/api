@@ -54,7 +54,21 @@ public class PaymentMethodController: ControllerBase
         return Ok(newPaymentMethodDto);
     }
 
-    // PUT request
+    [HttpPatch]
+    [Route("{id:guid}")]
+    public async Task<IActionResult> UpdatePaymentMethod([FromRoute] Guid id,
+        [FromBody] UpdatePaymentMethodDto updatePaymentMethodDto)
+    {
+        var updatePaymentMethodDomain = _mapper.Map<PaymentMethod>(updatePaymentMethodDto);
+        updatePaymentMethodDomain.UpdatedAt = DateTime.Now.ToUniversalTime();
+        var paymentMethod = await _repository.UpdatePaymentMethodAsync(id, updatePaymentMethodDomain);
+        
+        if (paymentMethod is null)
+            return NotFound();
+
+        var paymentMethodDto = _mapper.Map<PaymentMethodDto>(paymentMethod);
+        return Ok(paymentMethodDto);
+    }
 
     [HttpDelete]
     [Route("{id:guid}")]

@@ -27,6 +27,24 @@ public class PSQLTransactionRepository : ITransactionRepository
         return transactions;
     }
 
+    public async Task<List<Transaction>> GetTransactionsAsync(string currency)
+    {
+        var transactions = _context.Transactions
+            .Include("Currency")
+            .Include("PaymentMethod")
+            .Include("TransactionCategory")
+            .Include("TransactionType")
+            .AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(currency))
+        {
+            transactions = transactions
+                .Where(x => x.Currency.Name == currency);
+        }
+
+        return await transactions.ToListAsync();
+    }
+
     public async Task<Transaction> CreateAsync(Transaction transaction)
     {
         await _context.Transactions.AddAsync(transaction);

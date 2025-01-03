@@ -17,7 +17,7 @@ public class BalanceController : ControllerBase
         _repository = repository;
     }
 
-    class BalanceByCurrency
+    private class BalanceByCurrency
     {
         public string Currency { get; set; }
         public double Amount { get; set; }

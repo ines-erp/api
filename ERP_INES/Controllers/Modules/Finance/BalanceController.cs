@@ -26,9 +26,17 @@ public class BalanceController : ControllerBase
 
     //TODO: Verify if there is another way to get that as some kind o aggregation
     [HttpGet]
-    public async Task<IActionResult> GetBalance()
+    public async Task<IActionResult> GetBalance([FromQuery] string? currency)
     {
-        var transactionsResult = await _repository.GetTransactionsAsync();
+        List<Transaction> transactionsResult;
+        if (string.IsNullOrWhiteSpace(currency) == false)
+        {
+            transactionsResult = await _repository.GetTransactionsAsync(currency);
+        }
+        else
+        {
+            transactionsResult = await _repository.GetTransactionsAsync();
+        }
 
         //TODO: it must return a list of [{currency:X, balance:0.0, symbol:""}]
         var balance = new List<BalanceByCurrency>();

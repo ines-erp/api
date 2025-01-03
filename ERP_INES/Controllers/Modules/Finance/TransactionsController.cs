@@ -37,6 +37,11 @@ public class TransactionsController : ControllerBase
         transactionMapperToDomain.CreatedAt = DateTime.Now.ToUniversalTime();
         transactionMapperToDomain.UpdatedAt = transactionMapperToDomain.CreatedAt;
 
+        if (createTransactionDto.TransactionTypeId == Guid.Parse("fd5e3535-5a7c-4294-abde-49e869d77957"))
+        {
+            transactionMapperToDomain.Amount *= -1;
+        }
+
         var newTransaction = await _repository.CreateAsync(transactionMapperToDomain);
 
         var transactionMapperToDto = _mapper.Map<TransactionDto>(newTransaction);
@@ -50,7 +55,7 @@ public class TransactionsController : ControllerBase
     public async Task<IActionResult> GetTransactionById([FromRoute] Guid id)
     {
         var transactionResult = await _repository.GetTransactionsByIdAsync(id);
-        
+
         if (transactionResult is null)
             return NotFound();
 
@@ -84,7 +89,7 @@ public class TransactionsController : ControllerBase
     public async Task<IActionResult> DeleteTransaction([FromRoute] Guid id)
     {
         var transactionResult = await _repository.DeleteTransactionsAsync(id);
-        
+
         if (transactionResult is null)
             return NotFound();
 

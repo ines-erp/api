@@ -29,7 +29,6 @@ public class PSQLTransactionRepository : ITransactionRepository
 
     public async Task<Transaction> CreateAsync(Transaction transaction)
     {
-        //TODO: properlly map the create update and so on
         await _context.Transactions.AddAsync(transaction);
         await _context.SaveChangesAsync();
 

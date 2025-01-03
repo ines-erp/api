@@ -30,15 +30,38 @@ public class TransactionsController : ControllerBase
 
         return Ok(transactionsDto);
     }
-
+    
     [HttpPost]
     public async Task<IActionResult> CreateTransaction([FromBody] CreateTransactionDto createTransactionDto)
     {
 
-        var transactionMapper = _mapper.Map<Transaction>(createTransactionDto);
-        var newTransaction = await _repository.CreateAsync(transactionMapper);
+        var transactionMapperToDomain = _mapper.Map<Transaction>(createTransactionDto);
+        var newTransaction = await _repository.CreateAsync(transactionMapperToDomain);
         
-        return Ok(newTransaction);
+        var transactionMapperToDto =_mapper.Map<TransactionDto>(newTransaction);
+        
+        return CreatedAtAction(nameof(GetTransactionById), new {id = transactionMapperToDto.Id}, transactionMapperToDto);
+    }
+ 
+    [HttpGet]
+    [Route("{id:guid}")]
+    public async Task<IActionResult> GetTransactionById([FromBody] UpdateTransactionDto updateTransactionDto)
+    {
+        return Ok();
+    }
+
+    [HttpPut]
+    [Route("{id:guid}")]
+    public async Task<IActionResult> UpdateTransaction([FromBody] UpdateTransactionDto updateTransactionDto)
+    {
+        return Ok();
+    }
+    
+    [HttpDelete]
+    [Route("{id:guid}")]
+    public async Task<IActionResult> DeleteTransaction([FromBody] UpdateTransactionDto updateTransactionDto)
+    {
+        return Ok();
     }
     
 }

@@ -20,12 +20,12 @@ public class PaymentMethodController: ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetPaymentMethods()
+    public async Task<IActionResult> GetPaymentMethods([FromQuery] string? name)
     {
-        var paymentMethodsDomain = await _repository.GetPaymentMethodsAsync();
-        var paymenthMethodsDto = _mapper.Map<List<PaymentMethodDto>>(paymentMethodsDomain);
+        var paymentMethodsDomain = await _repository.GetPaymentMethodsAsync(name);
+        var paymentMethodsDto = _mapper.Map<List<PaymentMethodDto>>(paymentMethodsDomain);
 
-        return Ok(paymenthMethodsDto);
+        return Ok(paymentMethodsDto);
     }
 
     [HttpGet]

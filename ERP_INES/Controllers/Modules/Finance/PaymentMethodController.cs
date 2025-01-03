@@ -30,7 +30,7 @@ public class PaymentMethodController: ControllerBase
 
     [HttpGet]
     [Route("{id:guid}")]
-    public async Task<IActionResult> GetPaymentMethodById(Guid id)
+    public async Task<IActionResult> GetPaymentMethodById([FromRoute] Guid id)
     {
         var paymentMethod = await _repository.GetPaymentMethodByIdAsync(id);
         if (paymentMethod is null)
@@ -56,5 +56,15 @@ public class PaymentMethodController: ControllerBase
 
     // PUT request
 
-    // DELETE request
+    [HttpDelete]
+    [Route("{id:guid}")]
+    public async Task<IActionResult> DeletePaymentMethod([FromRoute] Guid id)
+    {
+        var paymentMethod = await _repository.DeletePaymentMethodAsync(id);
+
+        if (paymentMethod is null)
+            return NotFound();
+        
+        return Ok(paymentMethod);
+    }
 }

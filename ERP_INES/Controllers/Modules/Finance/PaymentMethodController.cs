@@ -1,6 +1,7 @@
 using AutoMapper;
 using ERP_INES.Data.Modules.Finance.Repositories.Interfaces;
 using ERP_INES.Domain.Modules.Finance.DTOs;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ERP_INES.Controllers.Modules.Finance;
@@ -27,9 +28,20 @@ public class PaymentMethodController: ControllerBase
         return Ok(paymenthMethodsDto);
     }
 
-    // GET by id request
+    [HttpGet]
+    [Route("{id:guid}")]
+    public async Task<IActionResult> GetPaymentMethodById(Guid id)
+    {
+        var paymentMethod = await _repository.GetPaymentMethodByIdAsync(id);
+        if (paymentMethod is null)
+            return NotFound();
 
-    // POST request
+        var paymentMethodDto = _mapper.Map<PaymentMethodDto>(paymentMethod);
+
+        return Ok(paymentMethodDto);
+    }
+
+    
 
     // PUT request
 

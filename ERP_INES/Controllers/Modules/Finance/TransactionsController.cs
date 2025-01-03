@@ -21,13 +21,20 @@ public class TransactionsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetTransactions()
+    public async Task<IActionResult> GetTransactions([FromQuery] string currency)
     {
-        var transactionDomain = await _repository.GetTransactionsAsync();
-
-        var transactionsDto = _mapper.Map<List<TransactionDto>>(transactionDomain);
-
-        return Ok(transactionsDto);
+        if (!string.IsNullOrWhiteSpace(currency))
+        {
+            var transactionDomain = await _repository.GetTransactionsAsync(currency);
+            var transactionsDto = _mapper.Map<List<TransactionDto>>(transactionDomain);
+            return Ok(transactionsDto);
+        }
+        else
+        {
+            var transactionDomain = await _repository.GetTransactionsAsync();
+            var transactionsDto = _mapper.Map<List<TransactionDto>>(transactionDomain);
+            return Ok(transactionsDto);
+        }
     }
 
     [HttpPost]

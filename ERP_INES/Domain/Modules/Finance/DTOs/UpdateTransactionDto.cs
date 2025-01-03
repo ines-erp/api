@@ -1,9 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using ERP_INES.Domain.Modules.Finance.Entities;
 
 namespace ERP_INES.Domain.Modules.Finance.DTOs;
 
-public class CreateTransactionDto
+public class UpdateTransactionDto
 {
     [Required]
     public string Name { get; set; }
@@ -18,5 +17,4 @@ public class CreateTransactionDto
     public Guid CurrencyId { get; set; }
     public Guid PaymentMethodId { get; set; }
     public Guid TransactionCategoryId { get; set; }
-
 }

@@ -36,7 +36,7 @@ public class TransactionsController : ControllerBase
         var transactionMapperToDomain = _mapper.Map<Transaction>(createTransactionDto);
         transactionMapperToDomain.CreatedAt = DateTime.Now.ToUniversalTime();
         transactionMapperToDomain.UpdatedAt = transactionMapperToDomain.CreatedAt;
-            
+
         var newTransaction = await _repository.CreateAsync(transactionMapperToDomain);
 
         var transactionMapperToDto = _mapper.Map<TransactionDto>(newTransaction);
@@ -49,12 +49,16 @@ public class TransactionsController : ControllerBase
     [Route("{id:guid}")]
     public async Task<IActionResult> GetTransactionById([FromRoute] Guid id)
     {
-        // var transactionResult = _repository.UpdateTransactionsAsync(id, _mapper.Map<Transaction>(updateTransactionDto));
-        // if(transactionResult is null)
-        //     return NotFound();
+        var transactionResult = await _repository.GetTransactionsByIdAsync(id);
+        
+        if (transactionResult is null)
+            return NotFound();
 
 
-        return Ok();
+        var transactionResultDto = _mapper.Map<TransactionDto>(transactionResult);
+
+
+        return Ok(transactionResultDto);
     }
 
     [HttpPut]
@@ -63,14 +67,16 @@ public class TransactionsController : ControllerBase
         [FromBody] UpdateTransactionDto updateTransactionDto)
     {
         var trasactionMappedToDomain = _mapper.Map<Transaction>(updateTransactionDto);
-        
+
         var transactionResult = await _repository.UpdateTransactionsAsync(id, trasactionMappedToDomain);
-        
+
         if (transactionResult is null)
             return NotFound();
 
+        var transactionResultDto = _mapper.Map<TransactionDto>(transactionResult);
 
-        return Ok(transactionResult);
+
+        return Ok(transactionResultDto);
     }
 
     [HttpDelete]

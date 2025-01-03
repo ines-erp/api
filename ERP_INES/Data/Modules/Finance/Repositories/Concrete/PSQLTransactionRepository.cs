@@ -39,7 +39,13 @@ public class PSQLTransactionRepository : ITransactionRepository
 
     public async Task<Transaction?> GetTransactionsByIdAsync(Guid id)
     {
-        var existingTransaction = await _context.Transactions.FirstOrDefaultAsync(x => x.Id == id);
+        var existingTransaction = await _context.Transactions
+            .Include("Currency")
+            .Include("PaymentMethod")
+            .Include("TransactionCategory")
+            .Include("TransactionType")
+            .FirstOrDefaultAsync(x => x.Id == id);
+
         if (existingTransaction == null)
             return null;
 

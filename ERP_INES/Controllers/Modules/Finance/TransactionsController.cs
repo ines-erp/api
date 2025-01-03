@@ -81,8 +81,17 @@ public class TransactionsController : ControllerBase
 
     [HttpDelete]
     [Route("{id:guid}")]
-    public async Task<IActionResult> DeleteTransaction([FromBody] UpdateTransactionDto updateTransactionDto)
+    public async Task<IActionResult> DeleteTransaction([FromRoute] Guid id)
     {
-        return Ok();
+        var transactionResult = await _repository.DeleteTransactionsAsync(id);
+        
+        if (transactionResult is null)
+            return NotFound();
+
+
+        var transactionResultDto = _mapper.Map<TransactionDto>(transactionResult);
+
+
+        return Ok(transactionResultDto);
     }
 }

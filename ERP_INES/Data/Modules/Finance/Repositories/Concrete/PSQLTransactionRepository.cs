@@ -75,8 +75,17 @@ public class PSQLTransactionRepository : ITransactionRepository
         return existingTransaction;
     }
 
-    public Task<Transaction?> DeleteTransactionsAsync(Guid id)
+    public async Task<Transaction?> DeleteTransactionsAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var existingTransaction = await _context.Transactions
+            .FirstOrDefaultAsync(x => x.Id == id);
+
+        if (existingTransaction == null)
+            return null;
+
+        _context.Transactions.Remove(existingTransaction);
+        await _context.SaveChangesAsync();
+
+        return existingTransaction;
     }
 }

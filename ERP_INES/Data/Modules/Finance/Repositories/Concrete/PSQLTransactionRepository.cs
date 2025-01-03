@@ -15,7 +15,12 @@ public class PSQLTransactionRepository : ITransactionRepository
 
     public async Task<List<Transaction>> GetTransactionsAsync()
     {
-        var transactions = await _context.Transactions.Include("Currency").Include("PaymentMethod").Include("TransactionCategory").ToListAsync();
+        var transactions = await _context.Transactions
+            .Include("Currency")
+            .Include("PaymentMethod")
+            .Include("TransactionCategory")
+            .Include("TransactionType")
+            .ToListAsync();
 
         return transactions;
     }

@@ -12,5 +12,6 @@ public class AutomapperFinanceProfiles : Profile
         CreateMap<CreateTransactionDto, Transaction>().ReverseMap();
         CreateMap<UpdateTransactionDto, Transaction>().ReverseMap();
         CreateMap<PaymentMethodDto, PaymentMethod>().ReverseMap();
+        CreateMap<CreatePaymentMethodDto, PaymentMethod>().ReverseMap();
     }
 }

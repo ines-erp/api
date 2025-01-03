@@ -1,7 +1,7 @@
 using AutoMapper;
 using ERP_INES.Data.Modules.Finance.Repositories.Interfaces;
 using ERP_INES.Domain.Modules.Finance.DTOs;
-using Microsoft.AspNetCore.Http.HttpResults;
+using ERP_INES.Domain.Modules.Finance.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ERP_INES.Controllers.Modules.Finance;
@@ -41,7 +41,18 @@ public class PaymentMethodController: ControllerBase
         return Ok(paymentMethodDto);
     }
 
-    
+    [HttpPost]
+    public async Task<IActionResult> CreatePaymentMethod([FromBody] CreatePaymentMethodDto createPaymentMethodDto)
+    {
+        var paymentMethodDomain = _mapper.Map<PaymentMethod>(createPaymentMethodDto);
+        paymentMethodDomain.CreatedAt = DateTime.Now.ToUniversalTime();
+
+        var newPaymentMethod = await _repository.CreatePaymentMethodAsync(paymentMethodDomain);
+
+        var newPaymentMethodDto = _mapper.Map<PaymentMethodDto>(newPaymentMethod);
+
+        return Ok(newPaymentMethodDto);
+    }
 
     // PUT request
 

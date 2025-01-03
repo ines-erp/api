@@ -24,12 +24,13 @@ public class BalanceController : ControllerBase
         public string Symbol { get; set; }
     }
 
+    //TODO: Verify if there is another way to get that as some kind o aggregation
     [HttpGet]
     public async Task<IActionResult> GetBalance()
     {
         var transactionsResult = await _repository.GetTransactionsAsync();
 
-        //TODO: it must return a list of [{currency:X, balance}]
+        //TODO: it must return a list of [{currency:X, balance:0.0, symbol:""}]
         var balance = new List<BalanceByCurrency>();
         foreach (var transaction in transactionsResult)
         {

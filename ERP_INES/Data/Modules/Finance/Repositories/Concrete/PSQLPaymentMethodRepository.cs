@@ -15,13 +15,7 @@ public class PSQLPaymentMethodRepository:IPaymentMethodRepository
         _context = context;
     }
 
-    public async Task<List<PaymentMethod>> GetPaymentMethodsAsync()
-    {
-        var paymentMethods = await _context.PaymentMethods.ToListAsync();
-        return paymentMethods;
-    }
-
-    public async Task<List<PaymentMethod>> GetPaymentMethodsAsync(string name)
+    public async Task<List<PaymentMethod>> GetPaymentMethodsAsync(string? name)
     {
         var paymentMethods = _context.PaymentMethods.AsQueryable();
 

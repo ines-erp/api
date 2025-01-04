@@ -17,7 +17,7 @@ builder.Services.AddDbContext<FinanceDbContext>(options =>
 );
 
 builder.Services.AddScoped<ITransactionRepository, PSQLTransactionRepository>();
-
+builder.Services.AddScoped<IPaymentMethodRepository, PSQLPaymentMethodRepository>();
 
 var app = builder.Build();
 

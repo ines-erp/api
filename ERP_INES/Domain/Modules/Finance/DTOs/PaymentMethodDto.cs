@@ -1,6 +1,6 @@
-namespace ERP_INES.Domain.Modules.Finance.Entities;
+namespace ERP_INES.Domain.Modules.Finance.DTOs;
 
-public class PaymentMethod
+public class PaymentMethodDto
 {
     public Guid Id { get; set; }
     public string Name { get; set; }

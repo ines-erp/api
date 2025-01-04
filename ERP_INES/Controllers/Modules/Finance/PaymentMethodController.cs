@@ -32,11 +32,11 @@ public class PaymentMethodController: ControllerBase
     [Route("{id:guid}")]
     public async Task<IActionResult> GetPaymentMethodById([FromRoute] Guid id)
     {
-        var paymentMethod = await _repository.GetPaymentMethodByIdAsync(id);
-        if (paymentMethod is null)
+        var paymentMethodDomain = await _repository.GetPaymentMethodByIdAsync(id);
+        if (paymentMethodDomain is null)
             return NotFound();
 
-        var paymentMethodDto = _mapper.Map<PaymentMethodDto>(paymentMethod);
+        var paymentMethodDto = _mapper.Map<PaymentMethodDto>(paymentMethodDomain);
 
         return Ok(paymentMethodDto);
     }
@@ -74,11 +74,12 @@ public class PaymentMethodController: ControllerBase
     [Route("{id:guid}")]
     public async Task<IActionResult> DeletePaymentMethod([FromRoute] Guid id)
     {
-        var paymentMethod = await _repository.DeletePaymentMethodAsync(id);
-
-        if (paymentMethod is null)
+        var paymentMethodDomain = await _repository.DeletePaymentMethodAsync(id);
+        
+        if (paymentMethodDomain is null)
             return NotFound();
         
-        return Ok(paymentMethod);
+        var paymentMethodDto = _mapper.Map<PaymentMethodDto>(paymentMethodDomain);
+        return Ok(paymentMethodDto);
     }
 }

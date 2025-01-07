@@ -54,7 +54,7 @@ public class PaymentMethodController: ControllerBase
         return Ok(newPaymentMethodDto);
     }
 
-    [HttpPatch]
+    [HttpPut]
     [Route("{id:guid}")]
     public async Task<IActionResult> UpdatePaymentMethod([FromRoute] Guid id,
         [FromBody] UpdatePaymentMethodDto updatePaymentMethodDto)

@@ -51,7 +51,7 @@ public class PSQLPaymentMethodRepository:IPaymentMethodRepository
 
         if (existingPaymentMethod is null)
             return null;
-
+        existingPaymentMethod.Type = paymentMethod.Type;
         existingPaymentMethod.Name = paymentMethod.Name;
         existingPaymentMethod.Description = paymentMethod.Description;
 

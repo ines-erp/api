@@ -20,9 +20,9 @@ public class PaymentMethodController: ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetPaymentMethods([FromQuery] string? name)
+    public async Task<IActionResult> GetPaymentMethods([FromQuery] string? search)
     {
-        var paymentMethodsDomain = await _repository.GetPaymentMethodsAsync(name);
+        var paymentMethodsDomain = await _repository.GetPaymentMethodsAsync(search);
         var paymentMethodsDto = _mapper.Map<List<PaymentMethodDto>>(paymentMethodsDomain);
 
         return Ok(paymentMethodsDto);

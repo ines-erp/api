@@ -15,13 +15,13 @@ public class PSQLPaymentMethodRepository:IPaymentMethodRepository
         _context = context;
     }
 
-    public async Task<List<PaymentMethod>> GetPaymentMethodsAsync(string? name)
+    public async Task<List<PaymentMethod>> GetPaymentMethodsAsync(string? search)
     {
         var paymentMethods = _context.PaymentMethods.AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(name))
+        if (!string.IsNullOrWhiteSpace(search))
         {
-            paymentMethods = paymentMethods.Where(method => method.Name == name);
+            paymentMethods = paymentMethods.Where(method => method.Name.Contains(search) || method.Type.Contains(search));
         }
 
         return await paymentMethods.ToListAsync();

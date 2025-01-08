@@ -70,14 +70,16 @@ public class FinanceDbContext : DbContext
             new PaymentMethod
             {
                 Id = Guid.Parse("1D69C5C3-9887-47E3-A07D-6CFFBB5051F5"),
-                Name = "Cash",
-                Description = "Paid by cash"
+                Type = "Card",
+                Name = "Debit card 4504",
+                Description = "The VISA card with end 4504 on the Santander account in the name of the company"
             },
             new PaymentMethod
             {
                 Id = Guid.Parse("A15541A5-335E-4CD9-9C2E-7240FD9A006F"),
-                Name = "Bank transfer",
-                Description = "Transferred to bank account"
+                Type = "Bank transfer",
+                Name = "Santander",
+                Description = "Transferred to Santander bank account"
             }
         };
 

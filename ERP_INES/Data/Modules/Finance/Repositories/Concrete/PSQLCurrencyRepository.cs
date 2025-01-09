@@ -1,4 +1,4 @@
-using System.Linq.Expressions;
+using System.Globalization;
 using ERP_INES.Data.Modules.Finance.Repositories.Interfaces;
 using ERP_INES.Domain.Modules.Finance.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -38,19 +38,44 @@ public class PSQLCurrencyRepository : ICurrencyRepository
         return await currencies.ToListAsync();
     }
     
-    public Task<Currency> GetCurrencyByIdAsync(Guid id)
+    public async Task<Currency> GetCurrencyByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var currency = await _context.Currencies.FirstOrDefaultAsync(currency => currency.Id == id);
+
+        if (currency is null)
+            return null;
+        
+        return currency;
     }
 
-    public Task<Currency?> CreateCurrencyAsync(Currency currency)
+    public async Task<Currency?> CreateCurrencyAsync(string regionCode)
     {
-        throw new NotImplementedException();
+        var regionInfo = new RegionInfo(regionCode);
+        var currency = new Currency()
+        {
+            Id = Guid.NewGuid(),
+            Name = regionInfo.CurrencyEnglishName,
+            Symbol =  regionInfo.CurrencySymbol,
+            ISOCode = regionInfo.ISOCurrencySymbol
+        };
+        
+        await _context.Currencies.AddAsync(currency);
+        await _context.SaveChangesAsync();
+
+        return currency;
     }
 
-    public Task<Currency?> UpdateCurrencyAsync(Guid id, Currency currency)
+    public async Task<Currency?> UpdateCurrencyAsync(Guid id, Currency currency)
     {
-        throw new NotImplementedException();
+        var existingCurrency = await _context.Currencies.FirstOrDefaultAsync(c => c.Id == id);
+
+        if (existingCurrency is null)
+            return null;
+
+        existingCurrency.Name = currency.Name;
+
+        await _context.SaveChangesAsync();
+        return existingCurrency;
     }
 
     public Task<Currency?> DeleteCurrencyAsync(Guid id)

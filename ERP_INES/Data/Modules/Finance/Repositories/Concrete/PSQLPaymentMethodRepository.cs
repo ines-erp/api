@@ -1,6 +1,5 @@
 using ERP_INES.Data.Modules.Finance.Repositories.Interfaces;
 using ERP_INES.Domain.Modules.Finance.Entities;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace ERP_INES.Data.Modules.Finance.Repositories.Concrete;
@@ -29,7 +28,7 @@ public class PSQLPaymentMethodRepository:IPaymentMethodRepository
     
     public async Task<PaymentMethod> GetPaymentMethodByIdAsync(Guid id)
     {
-        var paymentMethod = await _context.PaymentMethods.FindAsync(id);
+        var paymentMethod = await _context.PaymentMethods.Include(pm => pm.Currency).FirstOrDefaultAsync(pm => pm.Id == id);
 
         if (paymentMethod is null)
             return null;
@@ -47,13 +46,14 @@ public class PSQLPaymentMethodRepository:IPaymentMethodRepository
 
     public async Task<PaymentMethod?> UpdatePaymentMethodAsync(Guid id, PaymentMethod paymentMethod)
     {
-        var existingPaymentMethod = await _context.PaymentMethods.FirstOrDefaultAsync(method => method.Id == id);
+        var existingPaymentMethod = await _context.PaymentMethods.Include(pm=>pm.Currency).FirstOrDefaultAsync(method => method.Id == id);
 
         if (existingPaymentMethod is null)
             return null;
         existingPaymentMethod.Type = paymentMethod.Type;
         existingPaymentMethod.Name = paymentMethod.Name;
         existingPaymentMethod.Description = paymentMethod.Description;
+        existingPaymentMethod.UpdatedAt = paymentMethod.UpdatedAt;
 
         await _context.SaveChangesAsync();
         return existingPaymentMethod;

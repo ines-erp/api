@@ -46,7 +46,7 @@ public class PSQLPaymentMethodRepository:IPaymentMethodRepository
 
     public async Task<PaymentMethod?> UpdatePaymentMethodAsync(Guid id, PaymentMethod paymentMethod)
     {
-        var existingPaymentMethod = await _context.PaymentMethods.Include(pm=>pm.Currency).FirstOrDefaultAsync(method => method.Id == id);
+        var existingPaymentMethod = await _context.PaymentMethods.FirstOrDefaultAsync(method => method.Id == id);
 
         if (existingPaymentMethod is null)
             return null;
@@ -54,6 +54,7 @@ public class PSQLPaymentMethodRepository:IPaymentMethodRepository
         existingPaymentMethod.Name = paymentMethod.Name;
         existingPaymentMethod.Description = paymentMethod.Description;
         existingPaymentMethod.UpdatedAt = paymentMethod.UpdatedAt;
+        existingPaymentMethod.CurrencyId = paymentMethod.CurrencyId;
 
         await _context.SaveChangesAsync();
         return existingPaymentMethod;

@@ -12,7 +12,7 @@ public class TransactionDto
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     public string? PaidBy { get; set; }
-    public string? RecievedBy { get; set; }
+    public string? ReceivedBy { get; set; }
     
     public TransactionType TransactionType { get; set; }
     public Currency Currency { get; set; }

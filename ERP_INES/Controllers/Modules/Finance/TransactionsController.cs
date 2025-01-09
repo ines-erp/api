@@ -21,7 +21,7 @@ public class TransactionsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetTransactions([FromQuery] string currency)
+    public async Task<IActionResult> GetTransactions([FromQuery] string? currency)
     {
         if (!string.IsNullOrWhiteSpace(currency))
         {

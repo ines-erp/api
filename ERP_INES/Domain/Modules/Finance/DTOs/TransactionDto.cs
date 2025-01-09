@@ -15,7 +15,6 @@ public class TransactionDto
     public string? ReceivedBy { get; set; }
     
     public TransactionType TransactionType { get; set; }
-    public Currency Currency { get; set; }
     public PaymentMethod PaymentMethod { get; set; }
     public TransactionCategory? TransactionCategory { get; set; }
 }

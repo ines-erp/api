@@ -18,8 +18,8 @@ public class PSQLTransactionRepository : ITransactionRepository
     public async Task<List<Transaction>> GetTransactionsAsync()
     {
         var transactions = await _context.Transactions
-            .Include("Currency")
             .Include("PaymentMethod")
+            .Include("PaymentMethod.Currency")
             .Include("TransactionCategory")
             .Include("TransactionType")
             .ToListAsync();
@@ -27,11 +27,11 @@ public class PSQLTransactionRepository : ITransactionRepository
         return transactions;
     }
 
-    public async Task<List<Transaction>> GetTransactionsAsync(string currency)
+    public async Task<List<Transaction>> GetTransactionsAsync(string? currency)
     {
         var transactions = _context.Transactions
-            .Include("Currency")
             .Include("PaymentMethod")
+            .Include("PaymentMethod.Currency")
             .Include("TransactionCategory")
             .Include("TransactionType")
             .AsQueryable();
@@ -39,7 +39,7 @@ public class PSQLTransactionRepository : ITransactionRepository
         if (!string.IsNullOrWhiteSpace(currency))
         {
             transactions = transactions
-                .Where(x => x.Currency.Name == currency);
+                .Where(x => x.PaymentMethod.Currency.ISOCode == currency);
         }
 
         return await transactions.ToListAsync();
@@ -57,8 +57,8 @@ public class PSQLTransactionRepository : ITransactionRepository
     public async Task<Transaction?> GetTransactionsByIdAsync(Guid id)
     {
         var existingTransaction = await _context.Transactions
-            .Include("Currency")
             .Include("PaymentMethod")
+            .Include("PaymentMethod.Currency")
             .Include("TransactionCategory")
             .Include("TransactionType")
             .FirstOrDefaultAsync(x => x.Id == id);
@@ -80,8 +80,7 @@ public class PSQLTransactionRepository : ITransactionRepository
         existingTransaction.Description = transaction.Description;
         existingTransaction.Date = transaction.Date;
         existingTransaction.PaidBy = transaction.PaidBy;
-        existingTransaction.RecievedBy = transaction.RecievedBy;
-        existingTransaction.CurrencyId = transaction.CurrencyId;
+        existingTransaction.ReceivedBy = transaction.ReceivedBy;
         existingTransaction.PaymentMethodId = transaction.PaymentMethodId;
         existingTransaction.TransactionCategoryId = transaction.TransactionCategoryId;
         existingTransaction.TransactionTypeId = transaction.TransactionTypeId;

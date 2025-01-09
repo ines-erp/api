@@ -42,14 +42,14 @@ public class BalanceController : ControllerBase
         var balance = new List<BalanceByCurrency>();
         foreach (var transaction in transactionsResult)
         {
-            var currencyExists = balance.Find(x => x.Currency == transaction.Currency.Name);
+            var currencyExists = balance.Find(x => x.Currency == transaction.PaymentMethod.Currency.Name);
             if (currencyExists is null)
             {
                 balance.Add(new BalanceByCurrency
                 {
-                    Currency = transaction.Currency.Name,
+                    Currency = transaction.PaymentMethod.Currency.Name,
                     Amount = transaction.Amount,
-                    Symbol = transaction.Currency.Symbol
+                    Symbol = transaction.PaymentMethod.Currency.Symbol
                 });
             }
             else

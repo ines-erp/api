@@ -9,4 +9,6 @@ public class PaymentMethod
     public Guid CurrencyId { get; set; }
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
+    
+    public Currency Currency { get; set; } 
 }

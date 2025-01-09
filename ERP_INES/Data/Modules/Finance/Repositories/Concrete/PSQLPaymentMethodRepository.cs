@@ -17,8 +17,8 @@ public class PSQLPaymentMethodRepository:IPaymentMethodRepository
 
     public async Task<List<PaymentMethod>> GetPaymentMethodsAsync(string? search)
     {
-        var paymentMethods = _context.PaymentMethods.AsQueryable();
-
+        var paymentMethods = _context.PaymentMethods.Include(pm =>  pm.Currency).AsQueryable();
+        
         if (!string.IsNullOrWhiteSpace(search))
         {
             paymentMethods = paymentMethods.Where(method => method.Name.Contains(search) || method.Type.Contains(search));

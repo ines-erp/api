@@ -8,12 +8,12 @@ namespace ERP_INES.Controllers.Modules.Finance;
 [Route("api/v{v:apiVersion}/[controller]")]
 [ApiController]
 [ApiVersion("1")]
-public class PaymentMethodController: ControllerBase
+public class PaymentMethodsController: ControllerBase
 {
     private readonly IPaymentMethodRepository _repository;
     private readonly IMapper _mapper;
 
-    public PaymentMethodController(IPaymentMethodRepository repository, IMapper mapper)
+    public PaymentMethodsController(IPaymentMethodRepository repository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;

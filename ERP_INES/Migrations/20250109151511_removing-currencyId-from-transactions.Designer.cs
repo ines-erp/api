@@ -3,6 +3,7 @@ using System;
 using ERP_INES.Data.Modules.Finance;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ERP_INES.Migrations
 {
     [DbContext(typeof(FinanceDbContext))]
-    partial class FinanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250109151511_removing-currencyId-from-transactions")]
+    partial class removingcurrencyIdfromtransactions
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,6 +46,22 @@ namespace ERP_INES.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Currencies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("7df7cddf-471b-4e17-bc59-70b0ff0a144d"),
+                            ISOCode = "EUR",
+                            Name = "Euro",
+                            Symbol = "€"
+                        },
+                        new
+                        {
+                            Id = new Guid("10f35f9e-7810-44b7-be37-a9d7cd6ef5f8"),
+                            ISOCode = "BRL",
+                            Name = "Brazilian Real",
+                            Symbol = "R$"
+                        });
                 });
 
             modelBuilder.Entity("ERP_INES.Domain.Modules.Finance.Entities.PaymentMethod", b =>
@@ -54,11 +73,10 @@ namespace ERP_INES.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("text");
+                    b.Property<Guid>("CurrencyId")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("ISOCurrencySymbol")
-                        .IsRequired()
+                    b.Property<string>("Description")
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -74,22 +92,24 @@ namespace ERP_INES.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CurrencyId");
+
                     b.ToTable("PaymentMethods");
 
                     b.HasData(
                         new
                         {
                             Id = new Guid("1d69c5c3-9887-47e3-a07d-6cffbb5051f5"),
+                            CurrencyId = new Guid("7df7cddf-471b-4e17-bc59-70b0ff0a144d"),
                             Description = "The VISA card with end 4504 on the Santander account in the name of the company",
-                            ISOCurrencySymbol = "EUR",
                             Name = "Debit card 4504",
                             Type = "Card"
                         },
                         new
                         {
                             Id = new Guid("a15541a5-335e-4cd9-9c2e-7240fd9a006f"),
+                            CurrencyId = new Guid("7df7cddf-471b-4e17-bc59-70b0ff0a144d"),
                             Description = "Transferred to Santander bank account",
-                            ISOCurrencySymbol = "EUR",
                             Name = "Santander",
                             Type = "Bank transfer"
                         });
@@ -198,6 +218,17 @@ namespace ERP_INES.Migrations
                             Id = new Guid("fd5e3535-5a7c-4294-abde-49e869d77957"),
                             Name = "Outcome"
                         });
+                });
+
+            modelBuilder.Entity("ERP_INES.Domain.Modules.Finance.Entities.PaymentMethod", b =>
+                {
+                    b.HasOne("ERP_INES.Domain.Modules.Finance.Entities.Currency", "Currency")
+                        .WithMany()
+                        .HasForeignKey("CurrencyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Currency");
                 });
 
             modelBuilder.Entity("ERP_INES.Domain.Modules.Finance.Entities.Transaction", b =>

@@ -10,7 +10,6 @@ public class FinanceDbContext : DbContext
     {
     }
 
-    public DbSet<Currency> Currencies { get; set; }
     public DbSet<TransactionType> TransactionTypes { get; set; }
     public DbSet<TransactionCategory> TransactionCategories { get; set; }
     public DbSet<PaymentMethod> PaymentMethods { get; set; }
@@ -20,22 +19,6 @@ public class FinanceDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-
-        var currencies = new List<Currency>
-        {
-            new Currency
-            {
-                Id = Guid.Parse("7DF7CDDF-471B-4E17-BC59-70B0FF0A144D"),
-                Name = "Euro",
-                Symbol = "€"
-            },
-            new Currency
-            {
-                Id = Guid.Parse("10F35F9E-7810-44B7-BE37-A9D7CD6EF5F8"),
-                Name = "Brazilian Real",
-                Symbol = "R$"
-            }
-        };
 
         var transactionTypes = new List<TransactionType>
         {
@@ -72,18 +55,19 @@ public class FinanceDbContext : DbContext
                 Id = Guid.Parse("1D69C5C3-9887-47E3-A07D-6CFFBB5051F5"),
                 Type = "Card",
                 Name = "Debit card 4504",
-                Description = "The VISA card with end 4504 on the Santander account in the name of the company"
+                Description = "The VISA card with end 4504 on the Santander account in the name of the company",
+                ISOCurrencySymbol = "EUR"
             },
             new PaymentMethod
             {
                 Id = Guid.Parse("A15541A5-335E-4CD9-9C2E-7240FD9A006F"),
                 Type = "Bank transfer",
                 Name = "Santander",
-                Description = "Transferred to Santander bank account"
+                Description = "Transferred to Santander bank account",
+                ISOCurrencySymbol = "EUR"
             }
         };
 
-        modelBuilder.Entity<Currency>().HasData(currencies);
         modelBuilder.Entity<TransactionType>().HasData(transactionTypes);
         modelBuilder.Entity<TransactionCategory>().HasData(transactionCategories);
         modelBuilder.Entity<PaymentMethod>().HasData(paymentMethods);

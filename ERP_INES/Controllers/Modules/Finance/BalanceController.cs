@@ -1,6 +1,8 @@
 using System.Collections;
 using ERP_INES.Data.Modules.Finance.Repositories.Interfaces;
+using ERP_INES.Domain.Modules.Finance.DTOs;
 using ERP_INES.Domain.Modules.Finance.Entities;
+using ERP_INES.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ERP_INES.Controllers.Modules.Finance;
@@ -28,28 +30,30 @@ public class BalanceController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetBalance([FromQuery] string? currency)
     {
-        List<Transaction> transactionsResult;
-        if (string.IsNullOrWhiteSpace(currency) == false)
+        var transactionsResult = await _repository.GetTransactionsAsync(currency);
+        
+        List<CurrencyDto> availableCurrencies = new List<CurrencyDto>();
+        
+        foreach (var transaction in transactionsResult)
         {
-            transactionsResult = await _repository.GetTransactionsAsync(currency);
+            availableCurrencies.Add(CurrencyHelper.GetCurrencyInfoByIsoCode(transaction.PaymentMethod.ISOCurrencySymbol));
+                        
         }
-        else
-        {
-            transactionsResult = await _repository.GetTransactionsAsync();
-        }
-
-        //TODO: it must return a list of [{currency:X, balance:0.0, symbol:""}]
         var balance = new List<BalanceByCurrency>();
         foreach (var transaction in transactionsResult)
         {
-            var currencyExists = balance.Find(x => x.Currency == transaction.Currency.Name);
+            var transactionCurrency = availableCurrencies.Find(currency =>
+                currency.ISOCode == transaction.PaymentMethod.ISOCurrencySymbol);
+            
+            var currencyExists = balance.Find(x => x.Currency == transactionCurrency.Name);
+            
             if (currencyExists is null)
             {
                 balance.Add(new BalanceByCurrency
                 {
-                    Currency = transaction.Currency.Name,
+                    Currency = transactionCurrency.Name,
                     Amount = transaction.Amount,
-                    Symbol = transaction.Currency.Symbol
+                    Symbol = transactionCurrency.Symbol
                 });
             }
             else

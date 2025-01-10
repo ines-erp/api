@@ -10,15 +10,14 @@ public class Transaction
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
     public string? PaidBy { get; set; }
-    public string? RecievedBy { get; set; }
+    public string? ReceivedBy { get; set; }
 
-    public Guid CurrencyId { get; set; }
     public Guid PaymentMethodId { get; set; }
     public Guid TransactionCategoryId { get; set; }
     public Guid TransactionTypeId { get; set; }
 
     public TransactionType TransactionType { get; set; }
-    public Currency Currency { get; set; }
+    
     public PaymentMethod PaymentMethod { get; set; }
     public TransactionCategory? TransactionCategory { get; set; }
 }

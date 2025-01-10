@@ -1,3 +1,4 @@
+using System.Globalization;
 using AutoMapper;
 using ERP_INES.Data.Modules.Finance.Repositories.Interfaces;
 using ERP_INES.Domain.Modules.Finance.DTOs;
@@ -44,6 +45,28 @@ public class PaymentMethodsController: ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreatePaymentMethod([FromBody] CreatePaymentMethodDto createPaymentMethodDto)
     {
+        //Validate if currency ISO is valid
+        var localSymbol = createPaymentMethodDto.ISOCurrencySymbol;
+
+        if (!string.IsNullOrWhiteSpace(localSymbol))
+        {
+            var culturesInfo = CultureInfo
+                .GetCultures((CultureTypes.SpecificCultures))
+                .Select(ci => new RegionInfo(ci.Name));
+
+            var regionInfoLocale = culturesInfo.FirstOrDefault(ri => ri.ISOCurrencySymbol == localSymbol);
+            
+            if (regionInfoLocale is null)
+                return Problem("Currency code is wrong");
+            
+            createPaymentMethodDto.ISOCurrencySymbol = regionInfoLocale.ISOCurrencySymbol;
+        }
+        else
+        {
+            createPaymentMethodDto.ISOCurrencySymbol = "EUR";
+        }
+
+        
         var paymentMethodDomain = _mapper.Map<PaymentMethod>(createPaymentMethodDto);
         paymentMethodDomain.CreatedAt = DateTime.Now.ToUniversalTime();
 

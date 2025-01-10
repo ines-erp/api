@@ -2,6 +2,7 @@ using AutoMapper;
 using ERP_INES.Data.Modules.Finance.Repositories.Interfaces;
 using ERP_INES.Domain.Modules.Finance.DTOs;
 using ERP_INES.Domain.Modules.Finance.Entities;
+using ERP_INES.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ERP_INES.Controllers.Modules.Finance;
@@ -23,18 +24,17 @@ public class TransactionsController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetTransactions([FromQuery] string? currency)
     {
-        if (!string.IsNullOrWhiteSpace(currency))
+        var transactionDomain = await _repository.GetTransactionsAsync(currency);
+        var transactionsDto = _mapper.Map<List<TransactionDto>>(transactionDomain);
+        
+        foreach (var transaction in transactionsDto)
         {
-            var transactionDomain = await _repository.GetTransactionsAsync(currency);
-            var transactionsDto = _mapper.Map<List<TransactionDto>>(transactionDomain);
-            return Ok(transactionsDto);
+            var currencyInfo = CurrencyHelper.GetCurrencyInfoByIsoCode(transactionDomain.Find(t => t.Id == transaction.Id).PaymentMethod.ISOCurrencySymbol);
+            transaction.PaymentMethod.Currency = currencyInfo;
         }
-        else
-        {
-            var transactionDomain = await _repository.GetTransactionsAsync();
-            var transactionsDto = _mapper.Map<List<TransactionDto>>(transactionDomain);
-            return Ok(transactionsDto);
-        }
+        
+        return Ok(transactionsDto);
+      
     }
 
     [HttpPost]
@@ -68,7 +68,8 @@ public class TransactionsController : ControllerBase
 
 
         var transactionResultDto = _mapper.Map<TransactionDto>(transactionResult);
-
+        var currencyInfo = CurrencyHelper.GetCurrencyInfoByIsoCode(transactionResult.PaymentMethod.ISOCurrencySymbol);
+        transactionResultDto.PaymentMethod.Currency = currencyInfo;        
 
         return Ok(transactionResultDto);
     }

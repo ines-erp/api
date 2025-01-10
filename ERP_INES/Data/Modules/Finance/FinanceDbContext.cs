@@ -10,7 +10,6 @@ public class FinanceDbContext : DbContext
     {
     }
 
-    public DbSet<Currency> Currencies { get; set; }
     public DbSet<TransactionType> TransactionTypes { get; set; }
     public DbSet<TransactionCategory> TransactionCategories { get; set; }
     public DbSet<PaymentMethod> PaymentMethods { get; set; }

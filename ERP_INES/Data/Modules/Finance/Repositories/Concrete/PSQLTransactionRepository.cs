@@ -19,7 +19,6 @@ public class PSQLTransactionRepository : ITransactionRepository
     {
         var transactions = await _context.Transactions
             .Include("PaymentMethod")
-            .Include("PaymentMethod.Currency")
             .Include("TransactionCategory")
             .Include("TransactionType")
             .ToListAsync();
@@ -31,7 +30,6 @@ public class PSQLTransactionRepository : ITransactionRepository
     {
         var transactions = _context.Transactions
             .Include("PaymentMethod")
-            .Include("PaymentMethod.Currency")
             .Include("TransactionCategory")
             .Include("TransactionType")
             .AsQueryable();
@@ -39,7 +37,7 @@ public class PSQLTransactionRepository : ITransactionRepository
         if (!string.IsNullOrWhiteSpace(currency))
         {
             transactions = transactions
-                .Where(x => x.PaymentMethod.Currency.ISOCode == currency);
+                .Where(x => x.PaymentMethod.ISOCurrencySymbol == currency);
         }
 
         return await transactions.ToListAsync();
@@ -58,7 +56,6 @@ public class PSQLTransactionRepository : ITransactionRepository
     {
         var existingTransaction = await _context.Transactions
             .Include("PaymentMethod")
-            .Include("PaymentMethod.Currency")
             .Include("TransactionCategory")
             .Include("TransactionType")
             .FirstOrDefaultAsync(x => x.Id == id);

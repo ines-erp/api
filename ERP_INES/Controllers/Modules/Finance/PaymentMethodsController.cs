@@ -3,13 +3,15 @@ using AutoMapper;
 using ERP_INES.Data.Modules.Finance.Repositories.Interfaces;
 using ERP_INES.Domain.Modules.Finance.DTOs;
 using ERP_INES.Domain.Modules.Finance.Entities;
+using ERP_INES.Helpers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ERP_INES.Controllers.Modules.Finance;
+
 [Route("api/v{v:apiVersion}/[controller]")]
 [ApiController]
 [ApiVersion("1")]
-public class PaymentMethodsController: ControllerBase
+public class PaymentMethodsController : ControllerBase
 {
     private readonly IPaymentMethodRepository _repository;
     private readonly IMapper _mapper;
@@ -25,6 +27,13 @@ public class PaymentMethodsController: ControllerBase
     {
         var paymentMethodsDomain = await _repository.GetPaymentMethodsAsync(search);
         var paymentMethodsDto = _mapper.Map<List<PaymentMethodDto>>(paymentMethodsDomain);
+        foreach (var pm in paymentMethodsDto)
+        {
+            var currencyInfo =
+                CurrencyHelper.GetCurrencyInfoByIsoCode(paymentMethodsDomain.Find(method => method.Id == pm.Id)
+                    .ISOCurrencySymbol);
+            pm.Currency = currencyInfo;
+        }
 
         return Ok(paymentMethodsDto);
     }
@@ -38,6 +47,9 @@ public class PaymentMethodsController: ControllerBase
             return NotFound();
 
         var paymentMethodDto = _mapper.Map<PaymentMethodDto>(paymentMethodDomain);
+        var currencyInfo = CurrencyHelper.GetCurrencyInfoByIsoCode(paymentMethodDomain.ISOCurrencySymbol);
+
+        paymentMethodDto.Currency = currencyInfo;
 
         return Ok(paymentMethodDto);
     }
@@ -50,23 +62,19 @@ public class PaymentMethodsController: ControllerBase
 
         if (!string.IsNullOrWhiteSpace(localSymbol))
         {
-            var culturesInfo = CultureInfo
-                .GetCultures((CultureTypes.SpecificCultures))
-                .Select(ci => new RegionInfo(ci.Name));
+            var currencyInfo = CurrencyHelper.GetCurrencyInfoByIsoCode(localSymbol);
 
-            var regionInfoLocale = culturesInfo.FirstOrDefault(ri => ri.ISOCurrencySymbol == localSymbol);
-            
-            if (regionInfoLocale is null)
+            if (currencyInfo is null)
                 return Problem("Currency code is wrong");
-            
-            createPaymentMethodDto.ISOCurrencySymbol = regionInfoLocale.ISOCurrencySymbol;
+
+            createPaymentMethodDto.ISOCurrencySymbol = currencyInfo.ISOCode;
         }
         else
         {
             createPaymentMethodDto.ISOCurrencySymbol = "EUR";
         }
 
-        
+
         var paymentMethodDomain = _mapper.Map<PaymentMethod>(createPaymentMethodDto);
         paymentMethodDomain.CreatedAt = DateTime.Now.ToUniversalTime();
 
@@ -84,8 +92,22 @@ public class PaymentMethodsController: ControllerBase
     {
         var updatePaymentMethodDomain = _mapper.Map<PaymentMethod>(updatePaymentMethodDto);
         updatePaymentMethodDomain.UpdatedAt = DateTime.Now.ToUniversalTime();
+        if (!string.IsNullOrWhiteSpace(updatePaymentMethodDomain.ISOCurrencySymbol))
+        {
+            var currencyInfo = CurrencyHelper.GetCurrencyInfoByIsoCode(updatePaymentMethodDomain.ISOCurrencySymbol);
+
+            if (currencyInfo is null)
+                return Problem("Currency code is wrong");
+
+            updatePaymentMethodDomain.ISOCurrencySymbol = currencyInfo.ISOCode;
+        }
+        else
+        {
+            updatePaymentMethodDomain.ISOCurrencySymbol = "EUR";
+        }
+
         var paymentMethod = await _repository.UpdatePaymentMethodAsync(id, updatePaymentMethodDomain);
-        
+
         if (paymentMethod is null)
             return NotFound();
 
@@ -98,10 +120,10 @@ public class PaymentMethodsController: ControllerBase
     public async Task<IActionResult> DeletePaymentMethod([FromRoute] Guid id)
     {
         var paymentMethodDomain = await _repository.DeletePaymentMethodAsync(id);
-        
+
         if (paymentMethodDomain is null)
             return NotFound();
-        
+
         var paymentMethodDto = _mapper.Map<PaymentMethodDto>(paymentMethodDomain);
         return Ok(paymentMethodDto);
     }

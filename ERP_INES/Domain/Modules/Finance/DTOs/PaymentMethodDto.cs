@@ -11,5 +11,5 @@ public class PaymentMethodDto
 
     public DateTime? CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
-    public Currency Currency { get; set; }
+    public CurrencyDto Currency { get; set; }
 }

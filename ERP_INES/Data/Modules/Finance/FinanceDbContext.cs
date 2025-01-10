@@ -20,25 +20,6 @@ public class FinanceDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        var euroId = Guid.Parse("7DF7CDDF-471B-4E17-BC59-70B0FF0A144D");
-        
-        var currencies = new List<Currency>
-        {
-            new Currency
-            {
-                Id = euroId,
-                Name = "Euro",
-                Symbol = "€",
-                ISOCode = "EUR"
-            },
-            new Currency
-            {
-                Id = Guid.Parse("10F35F9E-7810-44B7-BE37-A9D7CD6EF5F8"),
-                Name = "Brazilian Real",
-                Symbol = "R$",
-                ISOCode = "BRL"
-            }
-        };
 
         var transactionTypes = new List<TransactionType>
         {
@@ -76,7 +57,7 @@ public class FinanceDbContext : DbContext
                 Type = "Card",
                 Name = "Debit card 4504",
                 Description = "The VISA card with end 4504 on the Santander account in the name of the company",
-                CurrencyId = euroId
+                ISOCurrencySymbol = "EUR"
             },
             new PaymentMethod
             {
@@ -84,11 +65,10 @@ public class FinanceDbContext : DbContext
                 Type = "Bank transfer",
                 Name = "Santander",
                 Description = "Transferred to Santander bank account",
-                CurrencyId = euroId
+                ISOCurrencySymbol = "EUR"
             }
         };
 
-        modelBuilder.Entity<Currency>().HasData(currencies);
         modelBuilder.Entity<TransactionType>().HasData(transactionTypes);
         modelBuilder.Entity<TransactionCategory>().HasData(transactionCategories);
         modelBuilder.Entity<PaymentMethod>().HasData(paymentMethods);

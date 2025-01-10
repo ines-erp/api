@@ -1,3 +1,4 @@
+using System.Globalization;
 using ERP_INES.Data.Modules.Finance.Repositories.Interfaces;
 using ERP_INES.Domain.Modules.Finance.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,7 @@ public class PSQLPaymentMethodRepository:IPaymentMethodRepository
 
     public async Task<List<PaymentMethod>> GetPaymentMethodsAsync(string? search)
     {
-        var paymentMethods = _context.PaymentMethods.Include(pm =>  pm.Currency).AsQueryable();
+        var paymentMethods = _context.PaymentMethods.AsQueryable();
         
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -28,7 +29,7 @@ public class PSQLPaymentMethodRepository:IPaymentMethodRepository
     
     public async Task<PaymentMethod> GetPaymentMethodByIdAsync(Guid id)
     {
-        var paymentMethod = await _context.PaymentMethods.Include(pm => pm.Currency).FirstOrDefaultAsync(pm => pm.Id == id);
+        var paymentMethod = await _context.PaymentMethods.FirstOrDefaultAsync(pm => pm.Id == id);
 
         if (paymentMethod is null)
             return null;
@@ -38,6 +39,7 @@ public class PSQLPaymentMethodRepository:IPaymentMethodRepository
 
     public async Task<PaymentMethod?> CreatePaymentMethodAsync(PaymentMethod paymentMethod)
     {
+
         await _context.PaymentMethods.AddAsync(paymentMethod);
         await _context.SaveChangesAsync();
 
@@ -54,7 +56,6 @@ public class PSQLPaymentMethodRepository:IPaymentMethodRepository
         existingPaymentMethod.Name = paymentMethod.Name;
         existingPaymentMethod.Description = paymentMethod.Description;
         existingPaymentMethod.UpdatedAt = paymentMethod.UpdatedAt;
-        existingPaymentMethod.CurrencyId = paymentMethod.CurrencyId;
 
         await _context.SaveChangesAsync();
         return existingPaymentMethod;

@@ -9,4 +9,5 @@ public class CreatePaymentMethodDto
     [Required]
     public string Name { get; set; }
     public string? Description { get; set; }
+    public string? ISOCurrencySymbol { get; set; }
 }

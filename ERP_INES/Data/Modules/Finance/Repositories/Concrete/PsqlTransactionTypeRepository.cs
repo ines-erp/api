@@ -1,39 +1,64 @@
 using ERP_INES.Data.Modules.Finance.Repositories.Interfaces;
 using ERP_INES.Domain.Modules.Finance.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace ERP_INES.Data.Modules.Finance.Repositories.Concrete;
 
-public class PsqlTransactionTypeRepository : ITransactionTypeRepository
+public class PsqlTransactionTypesRepository : ITransactionTypeRepository
 {
     private readonly FinanceDbContext _context;
 
-    public PsqlTransactionTypeRepository(FinanceDbContext context)
+    public PsqlTransactionTypesRepository(FinanceDbContext context)
     {
         _context = context;
     }
 
     public async Task<List<TransactionType>> GetAsync()
     {
-        throw new NotImplementedException();
+        var types = await _context.TransactionTypes.ToListAsync();
+
+        return types;
     }
 
-    public async Task<TransactionType?> GetByIdAsync()
+    public async Task<TransactionType?> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var type = await _context.TransactionTypes.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (type is null)
+            return null;
+
+        return type;
     }
 
-    public async Task<TransactionType> CreateAsync()
+    public async Task<TransactionType> CreateAsync(TransactionType transactionType)
     {
-        throw new NotImplementedException();
+        await _context.TransactionTypes.AddAsync(transactionType);
+        await _context.SaveChangesAsync();
+
+        return transactionType;
     }
 
-    public async Task<TransactionType?> PutAsync()
+    public async Task<TransactionType?> PutAsync(Guid id, TransactionType TransactionType)
     {
-        throw new NotImplementedException();
+        var type = await _context.TransactionTypes.FirstOrDefaultAsync(x => x.Id == id);
+        if (type is null)
+            return null;
+
+        type.Name = TransactionType.Name;
+        await _context.SaveChangesAsync();
+
+        return type;
     }
 
-    public async Task<TransactionType?> DeleteAsync()
+    public async Task<TransactionType?> DeleteAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var type = await _context.TransactionTypes.FirstOrDefaultAsync(x => x.Id == id);
+        if (type is null)
+            return null;
+
+        _context.TransactionTypes.Remove(type);
+        await _context.SaveChangesAsync();
+
+        return type;
     }
 }

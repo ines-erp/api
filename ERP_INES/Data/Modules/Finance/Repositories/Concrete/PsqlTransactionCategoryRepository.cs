@@ -1,5 +1,6 @@
 using ERP_INES.Data.Modules.Finance.Repositories.Interfaces;
 using ERP_INES.Domain.Modules.Finance.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace ERP_INES.Data.Modules.Finance.Repositories.Concrete;
 
@@ -14,26 +15,50 @@ public class PsqlTransactionCategoryRepository : ITransactionCategoryRespository
 
     public async Task<List<TransactionCategory>> GetAsync()
     {
-        throw new NotImplementedException();
+        var categories = await _context.TransactionCategories.ToListAsync();
+
+        return categories;
     }
 
-    public async Task<TransactionCategory?> GetByIdAsync()
+    public async Task<TransactionCategory?> GetByIdAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var category = await _context.TransactionCategories.FirstOrDefaultAsync(x => x.Id == id);
+
+        if (category is null)
+            return null;
+
+        return category;
     }
 
-    public async Task<TransactionCategory> CreateAsync()
+    public async Task<TransactionCategory> CreateAsync(TransactionCategory transactionCategory)
     {
-        throw new NotImplementedException();
+        await _context.TransactionCategories.AddAsync(transactionCategory);
+        await _context.SaveChangesAsync();
+
+        return transactionCategory;
     }
 
-    public async Task<TransactionCategory?> PutAsync()
+    public async Task<TransactionCategory?> PutAsync(Guid id, TransactionCategory transactionCategory)
     {
-        throw new NotImplementedException();
+        var category = await _context.TransactionCategories.FirstOrDefaultAsync(x => x.Id == id);
+        if (category is null)
+            return null;
+
+        category.Name = transactionCategory.Name;
+        await _context.SaveChangesAsync();
+
+        return category;
     }
 
-    public async Task<TransactionCategory?> DeleteAsync()
+    public async Task<TransactionCategory?> DeleteAsync(Guid id)
     {
-        throw new NotImplementedException();
+        var category = await _context.TransactionCategories.FirstOrDefaultAsync(x => x.Id == id);
+        if (category is null)
+            return null;
+
+        _context.TransactionCategories.Remove(category);
+        await _context.SaveChangesAsync();
+
+        return category;
     }
 }

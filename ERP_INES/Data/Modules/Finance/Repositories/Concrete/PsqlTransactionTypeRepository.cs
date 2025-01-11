@@ -38,13 +38,13 @@ public class PsqlTransactionTypesRepository : ITransactionTypeRepository
         return transactionType;
     }
 
-    public async Task<TransactionType?> PutAsync(Guid id, TransactionType TransactionType)
+    public async Task<TransactionType?> PutAsync(Guid id, TransactionType transactionType)
     {
         var type = await _context.TransactionTypes.FirstOrDefaultAsync(x => x.Id == id);
         if (type is null)
             return null;
 
-        type.Name = TransactionType.Name;
+        type.Name = transactionType.Name;
         await _context.SaveChangesAsync();
 
         return type;

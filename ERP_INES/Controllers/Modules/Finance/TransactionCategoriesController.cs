@@ -7,6 +7,9 @@ namespace ERP_INES.Controllers.Modules.Finance;
 [ApiController]
 public class TransactionCategoriesController : ControllerBase
 {
+    
+    
+    
     [HttpPost]
     public async Task<IActionResult> CreateCategory()
     {

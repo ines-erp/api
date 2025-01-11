@@ -20,21 +20,21 @@ public class TransactionCategoriesController : ControllerBase
     }
 
     [HttpGet]
-    [Route("/{id:guid}")]
+    [Route("{id:guid}")]
     public async Task<IActionResult> GetCategory([FromRoute] Guid id)
     {
         return Ok("category");
     }
 
     [HttpPut]
-    [Route("/{id:guid}")]
+    [Route("{id:guid}")]
     public async Task<IActionResult> PutCategory([FromRoute] Guid id)
     {
         return Ok("Put category");
     }
 
     [HttpDelete]
-    [Route("/{id:guid}")]
+    [Route("{id:guid}")]
     public async Task<IActionResult> DeleteCategory([FromRoute] Guid id)
     {
         return Ok("Delete category");

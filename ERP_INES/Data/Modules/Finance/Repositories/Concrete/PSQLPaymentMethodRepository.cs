@@ -56,6 +56,7 @@ public class PSQLPaymentMethodRepository:IPaymentMethodRepository
         existingPaymentMethod.Name = paymentMethod.Name;
         existingPaymentMethod.Description = paymentMethod.Description;
         existingPaymentMethod.UpdatedAt = paymentMethod.UpdatedAt;
+        existingPaymentMethod.ISOCurrencySymbol = paymentMethod.ISOCurrencySymbol;
 
         await _context.SaveChangesAsync();
         return existingPaymentMethod;

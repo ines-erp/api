@@ -15,52 +15,87 @@ public class TransactionCategoriesController : ControllerBase
     {
         this._repository = repository;
     }
-    
-    
+
+
     [HttpPost]
     public async Task<IActionResult> CreateTransactionCategory([FromBody] TransactionCategory transactionCategory)
     {
-        var category = await _repository.CreateAsync(transactionCategory);
-        return Ok(category);
+        var categoryDomain = await _repository.CreateAsync(transactionCategory);
+
+        var categoriesDto = new
+        {
+            Id = categoryDomain.Id,
+            Name = categoryDomain.Name
+        };
+
+        return Ok(categoriesDto);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetTransactionCategory()
     {
-        var categories = await _repository.GetAsync();
-        return Ok(categories);
+        var categoriesDomain = await _repository.GetAsync();
+
+        List<object> categoriesDto = [];
+
+        foreach (var category in categoriesDomain)
+        {
+            categoriesDto.Add(category);
+        }
+        
+        
+        return Ok(categoriesDto);
     }
 
     [HttpGet]
     [Route("{id:guid}")]
     public async Task<IActionResult> GetTransactionCategoryById([FromRoute] Guid id)
     {
-        var category = await _repository.GetByIdAsync(id);
-        if (category is null)
+        var categoryDomain = await _repository.GetByIdAsync(id);
+        if (categoryDomain is null)
             return NotFound();
 
-        return Ok(category);
+        var categoriesDto = new
+        {
+            Id = categoryDomain.Id,
+            Name = categoryDomain.Name
+        };
+
+        return Ok(categoriesDto);
     }
 
     [HttpPut]
     [Route("{id:guid}")]
-    public async Task<IActionResult> PutTransactionCategory([FromRoute] Guid id, [FromBody] TransactionCategory transactionCategory)
+    public async Task<IActionResult> PutTransactionCategory([FromRoute] Guid id,
+        [FromBody] TransactionCategory transactionCategory)
     {
         var categoryDomain = await _repository.PutAsync(id, transactionCategory);
         if (categoryDomain is null)
             return NotFound();
 
-        return Ok(categoryDomain);
+        var categoriesDto = new
+        {
+            Id = categoryDomain.Id,
+            Name = categoryDomain.Name
+        };
+
+        return Ok(categoriesDto);
     }
 
     [HttpDelete]
     [Route("{id:guid}")]
     public async Task<IActionResult> DeleteTransactionCategory([FromRoute] Guid id)
     {
-        var category = await _repository.DeleteAsync(id);
-        if (category is null)
+        var categoryDomain = await _repository.DeleteAsync(id);
+        if (categoryDomain is null)
             return NotFound();
 
-        return Ok(category);
+        var categoriesDto = new
+        {
+            Id = categoryDomain.Id,
+            Name = categoryDomain.Name
+        };
+
+        return Ok(categoriesDto);
     }
 }

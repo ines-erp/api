@@ -20,26 +20,47 @@ public class TransactionTypesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateTransactionType([FromBody] TransactionType transactionType)
     {
-        var types = await _repository.CreateAsync(transactionType);
-        return Ok(types);
+        var typeDomain = await _repository.CreateAsync(transactionType);
+
+        var typeDto = new
+        {
+            Id = typeDomain.Id,
+            Name = typeDomain.Name
+        };
+
+        return Ok(typeDto);
     }
 
     [HttpGet]
     public async Task<IActionResult> GetTransactionType()
     {
-        var types = await _repository.GetAsync();
-        return Ok(types);
+        var typeDomain = await _repository.GetAsync();
+
+        List<object> typesDto = [];
+        
+        foreach (var type in typeDomain)
+        {
+            typesDto.Add(type);
+        }
+        
+        return Ok(typesDto);
     }
 
     [HttpGet]
     [Route("{id:guid}")]
     public async Task<IActionResult> GetTransactionTypeById([FromRoute] Guid id)
     {
-        var type = await _repository.GetByIdAsync(id);
-        if (type is null)
+        var typeDomain = await _repository.GetByIdAsync(id);
+        if (typeDomain is null)
             return NotFound();
 
-        return Ok(type);
+        var typesDto = new
+        {
+            Id = typeDomain.Id,
+            Name = typeDomain.Name
+        };
+
+        return Ok(typesDto);
     }
 
     [HttpPut]
@@ -50,17 +71,29 @@ public class TransactionTypesController : ControllerBase
         if (typeDomain is null)
             return NotFound();
 
-        return Ok(typeDomain);
+        var typesDto = new
+        {
+            Id = typeDomain.Id,
+            Name = typeDomain.Name
+        };
+
+        return Ok(typesDto);
     }
 
     [HttpDelete]
     [Route("{id:guid}")]
     public async Task<IActionResult> DeleteTransactionType([FromRoute] Guid id)
     {
-        var type = await _repository.DeleteAsync(id);
-        if (type is null)
+        var typeDomain = await _repository.DeleteAsync(id);
+        if (typeDomain is null)
             return NotFound();
 
-        return Ok(type);
+        var typesDto = new
+        {
+            Id = typeDomain.Id,
+            Name = typeDomain.Name
+        };
+
+        return Ok(typesDto);
     }
 }

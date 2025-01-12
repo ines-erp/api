@@ -37,12 +37,16 @@ public class TransactionTypesController : ControllerBase
         var typeDomain = await _repository.GetAsync();
 
         List<object> typesDto = [];
-        
+
         foreach (var type in typeDomain)
         {
-            typesDto.Add(type);
+            typesDto.Add(new
+            {
+                Id = type.Id,
+                Name = type.Name
+            });
         }
-        
+
         return Ok(typesDto);
     }
 

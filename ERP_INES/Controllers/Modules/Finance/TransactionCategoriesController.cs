@@ -40,7 +40,11 @@ public class TransactionCategoriesController : ControllerBase
 
         foreach (var category in categoriesDomain)
         {
-            categoriesDto.Add(category);
+            categoriesDto.Add( new
+            {
+                Id = category.Id,
+                Name = category.Name
+            });
         }
         
         

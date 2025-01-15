@@ -1,5 +1,7 @@
 using System.Text;
 using ERP_INES.Data.Modules.Auth;
+using ERP_INES.Data.Modules.Auth.Repository.Concrete;
+using ERP_INES.Data.Modules.Auth.Repository.Interfaces;
 using ERP_INES.Data.Modules.Finance;
 using ERP_INES.Data.Modules.Finance.Repositories.Concrete;
 using ERP_INES.Data.Modules.Finance.Repositories.Interfaces;
@@ -28,6 +30,7 @@ builder.Services.AddScoped<ITransactionRepository, PSQLTransactionRepository>();
 builder.Services.AddScoped<IPaymentMethodRepository, PSQLPaymentMethodRepository>();
 builder.Services.AddScoped<ITransactionCategoryRespository, PsqlTransactionCategoryRepository>();
 builder.Services.AddScoped<ITransactionTypeRepository, PsqlTransactionTypesRepository>();
+builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 
 
 //That will inject the identity to our solution.
@@ -61,7 +64,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
                 .GetBytes((builder.Configuration["Jwt:Key"])))
         });
-
 
 
 var app = builder.Build();

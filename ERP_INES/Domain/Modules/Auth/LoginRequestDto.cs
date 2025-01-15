@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ERP_INES.Domain.Modules.Auth;
 
-public class LoginUserDto
+public class LoginRequestDto
 {
     [Required]
     [DataType(DataType.EmailAddress)]

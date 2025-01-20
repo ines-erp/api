@@ -5,23 +5,34 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ERP_INES.Data.Modules.Finance.Repositories.Concrete;
 
-public class PSQLPaymentMethodRepository:IPaymentMethodRepository
+public class PsqlPaymentMethodRepository:IPaymentMethodRepository
 {
     
     private readonly FinanceDbContext _context;
 
-    public PSQLPaymentMethodRepository(FinanceDbContext context)
+    public PsqlPaymentMethodRepository(FinanceDbContext context)
     {
         _context = context;
     }
 
-    public async Task<List<PaymentMethod>> GetPaymentMethodsAsync(string? search)
+    public async Task<List<PaymentMethod>> GetPaymentMethodsAsync(string? name, string? type, string? currency)
     {
         var paymentMethods = _context.PaymentMethods.AsQueryable();
         
-        if (!string.IsNullOrWhiteSpace(search))
+        if (!string.IsNullOrWhiteSpace(name))
         {
-            paymentMethods = paymentMethods.Where(method => method.Name.Contains(search) || method.Type.Contains(search));
+            paymentMethods = paymentMethods.Where(method => method.Name.ToLower().Contains(name.ToLower()));
+        }
+        
+        if (!string.IsNullOrWhiteSpace(type))
+        {
+            paymentMethods = paymentMethods.Where(method => method.Type.ToLower().Contains(type.ToLower()));
+        }
+        
+        // Case currency need to be the exact same value of iso currency
+        if (!string.IsNullOrWhiteSpace(currency))
+        {
+            paymentMethods = paymentMethods.Where(method => method.ISOCurrencySymbol.ToLower().Equals(currency.ToLower()));
         }
 
         return await paymentMethods.ToListAsync();

@@ -15,7 +15,15 @@ public class PsqlPaymentMethodRepository:IPaymentMethodRepository
         _context = context;
     }
 
-    public async Task<List<PaymentMethod>> GetPaymentMethodsAsync(string? name, string? type, string? currency, string? sortBy, bool isAscending = true)
+    public async Task<List<PaymentMethod>> GetPaymentMethodsAsync(
+        string? name,
+        string? type,
+        string? currency,
+        string? sortBy,
+        bool isAscending = true,
+        int pageNumber = 1,
+        int pageSize = 1000
+        )
     {
         var paymentMethods = _context.PaymentMethods.AsQueryable();
         
@@ -64,7 +72,10 @@ public class PsqlPaymentMethodRepository:IPaymentMethodRepository
             }
         }
         
-        return await paymentMethods.ToListAsync();
+        // Pagination
+        var skipResults = (pageNumber - 1) * pageSize;
+        
+        return await paymentMethods.Skip(skipResults).Take(pageSize).ToListAsync();
     }
     
     public async Task<PaymentMethod> GetPaymentMethodByIdAsync(Guid id)

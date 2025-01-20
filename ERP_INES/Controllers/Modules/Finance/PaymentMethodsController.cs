@@ -23,9 +23,9 @@ public class PaymentMethodsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetPaymentMethods([FromQuery] string? name, [FromQuery] string? currency, [FromQuery] string? type)
+    public async Task<IActionResult> GetPaymentMethods([FromQuery] string? name, [FromQuery] string? currency, [FromQuery] string? type, [FromQuery] string? sortBy, [FromQuery] bool? isAscending)
     {
-        var paymentMethodsDomain = await _repository.GetPaymentMethodsAsync(name, type, currency );
+        var paymentMethodsDomain = await _repository.GetPaymentMethodsAsync(name, type, currency, sortBy, isAscending ?? true);
         var paymentMethodsDto = _mapper.Map<List<PaymentMethodDto>>(paymentMethodsDomain);
         foreach (var pm in paymentMethodsDto)
         {

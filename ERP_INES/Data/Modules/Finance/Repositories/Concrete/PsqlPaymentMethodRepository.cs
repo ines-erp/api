@@ -15,10 +15,11 @@ public class PsqlPaymentMethodRepository:IPaymentMethodRepository
         _context = context;
     }
 
-    public async Task<List<PaymentMethod>> GetPaymentMethodsAsync(string? name, string? type, string? currency)
+    public async Task<List<PaymentMethod>> GetPaymentMethodsAsync(string? name, string? type, string? currency, string? sortBy, bool isAscending = true)
     {
         var paymentMethods = _context.PaymentMethods.AsQueryable();
         
+        // Filtering
         if (!string.IsNullOrWhiteSpace(name))
         {
             paymentMethods = paymentMethods.Where(method => method.Name.ToLower().Contains(name.ToLower()));
@@ -35,6 +36,34 @@ public class PsqlPaymentMethodRepository:IPaymentMethodRepository
             paymentMethods = paymentMethods.Where(method => method.ISOCurrencySymbol.ToLower().Equals(currency.ToLower()));
         }
 
+        // Sorting
+        if (!string.IsNullOrWhiteSpace(sortBy))
+        {
+            switch (sortBy.ToLower())
+            {
+                case "name":
+                    paymentMethods = isAscending
+                        ? paymentMethods.OrderBy(pm => pm.Name)
+                        : paymentMethods.OrderByDescending(pm => pm.Name);
+                    break;
+                case "type":
+                    paymentMethods = isAscending
+                        ? paymentMethods.OrderBy(pm => pm.Type)
+                        : paymentMethods.OrderByDescending(pm => pm.Type);
+                    break;
+                case "currency":
+                    paymentMethods = isAscending
+                        ? paymentMethods.OrderBy(pm => pm.ISOCurrencySymbol)
+                        : paymentMethods.OrderByDescending(pm => pm.ISOCurrencySymbol);
+                    break;
+                default:
+                    paymentMethods = isAscending
+                        ? paymentMethods.OrderBy(pm => pm.CreatedAt)
+                        : paymentMethods.OrderByDescending(pm => pm.CreatedAt);
+                    break;
+            }
+        }
+        
         return await paymentMethods.ToListAsync();
     }
     

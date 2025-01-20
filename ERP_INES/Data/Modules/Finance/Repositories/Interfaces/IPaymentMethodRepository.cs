@@ -4,7 +4,7 @@ namespace ERP_INES.Data.Modules.Finance.Repositories.Interfaces;
 
 public interface IPaymentMethodRepository
 {
-    Task<List<PaymentMethod>> GetPaymentMethodsAsync(string? name,  string? type, string? currency);
+    Task<List<PaymentMethod>> GetPaymentMethodsAsync(string? name,  string? type, string? currency, string? sortBy, bool isAscending=true);
     Task<PaymentMethod> GetPaymentMethodByIdAsync(Guid id);
     Task<PaymentMethod?> CreatePaymentMethodAsync(PaymentMethod paymentMethod);
     Task<PaymentMethod?> UpdatePaymentMethodAsync(Guid id, PaymentMethod paymentMethod);

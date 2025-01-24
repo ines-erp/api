@@ -8,10 +8,10 @@ public interface IPaymentMethodRepository
         string? name,
         string? type,
         string? currency,
-        string? sortBy,
-        bool isAscending=true,
-        int pageNumber = 1,
-        int pageSize = 1000
+        string? sort,
+        string order="asc",
+        int page = 1,
+        int limit = 1000
         );
     Task<PaymentMethod> GetPaymentMethodByIdAsync(Guid id);
     Task<PaymentMethod?> CreatePaymentMethodAsync(PaymentMethod paymentMethod);

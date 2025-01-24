@@ -19,10 +19,10 @@ public class PsqlPaymentMethodRepository:IPaymentMethodRepository
         string? name,
         string? type,
         string? currency,
-        string? sortBy,
-        bool isAscending = true,
-        int pageNumber = 1,
-        int pageSize = 1000
+        string? sort,
+        string order = "asc",
+        int page = 1,
+        int limit = 1000
         )
     {
         var paymentMethods = _context.PaymentMethods.AsQueryable();
@@ -45,27 +45,27 @@ public class PsqlPaymentMethodRepository:IPaymentMethodRepository
         }
 
         // Sorting
-        if (!string.IsNullOrWhiteSpace(sortBy))
+        if (!string.IsNullOrWhiteSpace(sort))
         {
-            switch (sortBy.ToLower())
+            switch (sort.ToLower())
             {
                 case "name":
-                    paymentMethods = isAscending
+                    paymentMethods = order == "asc"
                         ? paymentMethods.OrderBy(pm => pm.Name)
                         : paymentMethods.OrderByDescending(pm => pm.Name);
                     break;
                 case "type":
-                    paymentMethods = isAscending
+                    paymentMethods = order == "asc"
                         ? paymentMethods.OrderBy(pm => pm.Type)
                         : paymentMethods.OrderByDescending(pm => pm.Type);
                     break;
                 case "currency":
-                    paymentMethods = isAscending
+                    paymentMethods = order == "asc"
                         ? paymentMethods.OrderBy(pm => pm.ISOCurrencySymbol)
                         : paymentMethods.OrderByDescending(pm => pm.ISOCurrencySymbol);
                     break;
                 default:
-                    paymentMethods = isAscending
+                    paymentMethods = order == "asc"
                         ? paymentMethods.OrderBy(pm => pm.CreatedAt)
                         : paymentMethods.OrderByDescending(pm => pm.CreatedAt);
                     break;
@@ -73,9 +73,9 @@ public class PsqlPaymentMethodRepository:IPaymentMethodRepository
         }
         
         // Pagination
-        var skipResults = (pageNumber - 1) * pageSize;
+        var skipResults = (page - 1) * limit;
         
-        return await paymentMethods.Skip(skipResults).Take(pageSize).ToListAsync();
+        return await paymentMethods.Skip(skipResults).Take(limit).ToListAsync();
     }
     
     public async Task<PaymentMethod> GetPaymentMethodByIdAsync(Guid id)

@@ -27,13 +27,13 @@ public class PaymentMethodsController : ControllerBase
         [FromQuery] string? name,
         [FromQuery] string? currency,
         [FromQuery] string? type,
-        [FromQuery] string? sortBy,
-        [FromQuery] bool? isAscending,
-        [FromQuery] int? pageNumber,
-        [FromQuery] int? pageSize
+        [FromQuery] string? sort,
+        [FromQuery] string? order,
+        [FromQuery] int? page,
+        [FromQuery] int? limit
         )
     {
-        var paymentMethodsDomain = await _repository.GetPaymentMethodsAsync(name, type, currency, sortBy, isAscending ?? true, pageNumber ?? 1, pageSize ?? 1000);
+        var paymentMethodsDomain = await _repository.GetPaymentMethodsAsync(name, type, currency, sort, order, page ?? 1, limit ?? 1000);
         var paymentMethodsDto = _mapper.Map<List<PaymentMethodDto>>(paymentMethodsDomain);
         foreach (var pm in paymentMethodsDto)
         {

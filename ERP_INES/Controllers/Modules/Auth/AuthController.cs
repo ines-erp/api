@@ -79,6 +79,6 @@ public class AuthController : ControllerBase
         }
 
 
-        return Ok();
+        return BadRequest("Something went wrong, so please review username or password");
     }
 }

@@ -3,6 +3,7 @@ using ERP_INES.Data.Modules.Finance.Repositories.Interfaces;
 using ERP_INES.Domain.Modules.Finance.DTOs;
 using ERP_INES.Domain.Modules.Finance.Entities;
 using ERP_INES.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ERP_INES.Controllers.Modules.Finance;
@@ -10,6 +11,7 @@ namespace ERP_INES.Controllers.Modules.Finance;
 [Route("api/v{v:apiVersion}/[controller]")]
 [ApiController]
 [ApiVersion("1")]
+[Authorize(Roles = "Writer, Reader")]
 public class TransactionsController : ControllerBase
 {
     private readonly ITransactionRepository _repository;

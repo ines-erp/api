@@ -23,9 +23,17 @@ public class PaymentMethodsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetPaymentMethods([FromQuery] string? search)
+    public async Task<IActionResult> GetPaymentMethods(
+        [FromQuery] string? name,
+        [FromQuery] string? currency,
+        [FromQuery] string? type,
+        [FromQuery] string? sort,
+        [FromQuery] string? order,
+        [FromQuery] int? page,
+        [FromQuery] int? limit
+        )
     {
-        var paymentMethodsDomain = await _repository.GetPaymentMethodsAsync(search);
+        var paymentMethodsDomain = await _repository.GetPaymentMethodsAsync(name, type, currency, sort, order, page ?? 1, limit ?? 1000);
         var paymentMethodsDto = _mapper.Map<List<PaymentMethodDto>>(paymentMethodsDomain);
         foreach (var pm in paymentMethodsDto)
         {

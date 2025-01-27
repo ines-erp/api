@@ -27,7 +27,7 @@ builder.Services.AddDbContext<InesAuthDbContext>(options =>
 );
 
 builder.Services.AddScoped<ITransactionRepository, PSQLTransactionRepository>();
-builder.Services.AddScoped<IPaymentMethodRepository, PSQLPaymentMethodRepository>();
+builder.Services.AddScoped<IPaymentMethodRepository, PsqlPaymentMethodRepository>();
 builder.Services.AddScoped<ITransactionCategoryRespository, PsqlTransactionCategoryRepository>();
 builder.Services.AddScoped<ITransactionTypeRepository, PsqlTransactionTypesRepository>();
 builder.Services.AddScoped<ITokenRepository, TokenRepository>();

@@ -26,7 +26,7 @@ builder.Services.AddDbContext<InesAuthDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("IdentityServerDb"))
 );
 
-builder.Services.AddScoped<ITransactionRepository, PSQLTransactionRepository>();
+builder.Services.AddScoped<ITransactionRepository, PsqlTransactionRepository>();
 builder.Services.AddScoped<IPaymentMethodRepository, PsqlPaymentMethodRepository>();
 builder.Services.AddScoped<ITransactionCategoryRespository, PsqlTransactionCategoryRepository>();
 builder.Services.AddScoped<ITransactionTypeRepository, PsqlTransactionTypesRepository>();

@@ -24,9 +24,14 @@ public class TransactionsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetTransactions([FromQuery] string? currency)
+    public async Task<IActionResult> GetTransactions([FromQuery] string? currency,
+        [FromQuery] string? sort,
+        [FromQuery] string? order,
+        [FromQuery] int? page,
+        [FromQuery] int? limit
+        )
     {
-        var transactionDomain = await _repository.GetTransactionsAsync(currency);
+        var transactionDomain = await _repository.GetTransactionsAsync(currency, sort, order, page ?? 1, limit ?? 1000);
         var transactionsDto = _mapper.Map<List<TransactionDto>>(transactionDomain);
         
         foreach (var transaction in transactionsDto)

@@ -23,25 +23,26 @@ public class PsqlPaymentMethodRepository:IPaymentMethodRepository
         string order = "asc",
         int page = 1,
         int limit = 1000
-        )
+    )
     {
         var paymentMethods = _context.PaymentMethods.AsQueryable();
-        
+
         // Filtering
         if (!string.IsNullOrWhiteSpace(name))
         {
             paymentMethods = paymentMethods.Where(method => method.Name.ToLower().Contains(name.ToLower()));
         }
-        
+
         if (!string.IsNullOrWhiteSpace(type))
         {
             paymentMethods = paymentMethods.Where(method => method.Type.ToLower().Contains(type.ToLower()));
         }
-        
+
         // Case currency need to be the exact same value of iso currency
         if (!string.IsNullOrWhiteSpace(currency))
         {
-            paymentMethods = paymentMethods.Where(method => method.ISOCurrencySymbol.ToLower().Equals(currency.ToLower()));
+            paymentMethods =
+                paymentMethods.Where(method => method.ISOCurrencySymbol.ToLower().Equals(currency.ToLower()));
         }
 
         // Sorting
@@ -71,11 +72,15 @@ public class PsqlPaymentMethodRepository:IPaymentMethodRepository
                     break;
             }
         }
-        
+
         // Pagination
-        var skipResults = (page - 1) * limit;
-        
-        return await paymentMethods.Skip(skipResults).Take(limit).ToListAsync();
+        if (limit != -1)
+        {
+            var skipResults = (page - 1) * limit;
+            paymentMethods = paymentMethods.Skip(skipResults).Take(limit);
+        }
+
+    return await paymentMethods.ToListAsync();
     }
     
     public async Task<PaymentMethod> GetPaymentMethodByIdAsync(Guid id)

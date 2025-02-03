@@ -30,7 +30,7 @@ public class BalanceController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetBalance([FromQuery] string? currency)
     {
-        var transactionsResult = await _repository.GetTransactionsAsync(currency);
+        var transactionsResult = await _repository.GetTransactionsAsync(currency, null, null, 1, 1000);
         
         List<CurrencyDto> availableCurrencies = new List<CurrencyDto>();
         

@@ -33,7 +33,7 @@ public class PaymentMethodsController : ControllerBase
         [FromQuery] int? limit
         )
     {
-        var paymentMethodsDomain = await _repository.GetPaymentMethodsAsync(name, type, currency, sort, order, page ?? 1, limit ?? 1000);
+        var paymentMethodsDomain = await _repository.GetPaymentMethodsAsync(name, type, currency, sort, order, page ?? 1, limit ?? 50);
         var paymentMethodsDto = _mapper.Map<List<PaymentMethodDto>>(paymentMethodsDomain);
         foreach (var pm in paymentMethodsDto)
         {

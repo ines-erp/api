@@ -8,7 +8,7 @@ public interface ITransactionRepository
         string? sort,
         string order="asc",
         int page = 1,
-        int limit = 1000
+        int limit = 50
         );
     
     Task<Transaction> CreateAsync(Transaction transaction);

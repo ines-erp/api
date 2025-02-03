@@ -22,7 +22,7 @@ public class PsqlPaymentMethodRepository:IPaymentMethodRepository
         string? sort,
         string order = "asc",
         int page = 1,
-        int limit = 1000
+        int limit = 50
     )
     {
         var paymentMethods = _context.PaymentMethods.AsQueryable();

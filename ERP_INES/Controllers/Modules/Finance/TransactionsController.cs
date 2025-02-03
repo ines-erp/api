@@ -31,7 +31,7 @@ public class TransactionsController : ControllerBase
         [FromQuery] int? limit
         )
     {
-        var transactionDomain = await _repository.GetTransactionsAsync(currency, sort, order, page ?? 1, limit ?? 1000);
+        var transactionDomain = await _repository.GetTransactionsAsync(currency, sort, order, page ?? 1, limit ?? 50);
         var transactionsDto = _mapper.Map<List<TransactionDto>>(transactionDomain);
         
         foreach (var transaction in transactionsDto)

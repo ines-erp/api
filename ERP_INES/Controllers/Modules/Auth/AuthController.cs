@@ -36,7 +36,7 @@ public class AuthController : ControllerBase
         {
             if (registerUserDto.Roles != null && registerUserDto.Roles.Any())
             {
-                await _userManager.AddToRolesAsync(identityUser, registerUserDto.Roles);
+                identityUserResult = await _userManager.AddToRolesAsync(identityUser, registerUserDto.Roles);
                 if (identityUserResult.Succeeded)
                 {
                     return Ok("User was created, now you could login");
